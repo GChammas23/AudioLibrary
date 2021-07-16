@@ -1,0 +1,22 @@
+{
+  "name": "audiolibrary",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GChammas23/AudioLibrary.git"
+  },
+  "author": "Gabriel Chammas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GChammas23/AudioLibrary/issues"
+  },
+  "homepage": "https://github.com/GChammas23/AudioLibrary#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
