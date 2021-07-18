@@ -1,18 +1,20 @@
 //Require Category model
 const Category = require("../model/category");
 
-//CATEGORY API's
-
-//ADD CATEGORY
+//ADD CATEGORY API
 exports.addCategory = (req, res) => {
+
+  //Extract values from request's body
   const { name } = req.body;
   const { description } = req.body;
 
+  //Create object from model with given values
   const category = new Category({
     name: name,
     description: description,
   });
 
+  //Save category to DB
   category
     .save()
     .then((result) => {

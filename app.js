@@ -8,8 +8,12 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//Require and use routes needed
 const categoryRoute = require("./routes/category.routes");
 app.use('/api/categories', categoryRoute);
+
+const albumRoutes = require("./routes/album.routes");
+app.use('/api/albums', albumRoutes);
 
 //CREATE SERVER
 const server = http.createServer(app);

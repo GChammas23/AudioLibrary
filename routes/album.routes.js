@@ -4,3 +4,7 @@ const router = express.Router();
 
 //Require album services to access methods
 const albums = require("../controllers/album.controller");
+
+router.post('/addAlbum', albums.addAlbum);
+
+module.exports = router;
