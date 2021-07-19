@@ -58,25 +58,37 @@ exports.getAllTracks = (req, res) => {
     });
 };
 
-//GET TRACK BY ID API
-exports.getTrackById = (req, res) => {
+//GET TRACK BY SINGER API
+exports.getTrackBySinger = (req, res) => {
   //Get id from request
-  const { _id } = req.body;
+  const { albumSinger } = req.body;
 
-  Track.findById(_id)
-    .then((result) => {
-      res
-        .status(200)
-        .send({ message: "Track successfully fetched!", track: result });
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .send({
-          message: "Error occured while trying to fetch the track",
-          error: err,
-        });
-    });
+  if (albumSinger === undefined) {
+    res.status(400).send({ message: "Please make sure to specify a singer!" });
+  } else {
+    Track.aggregate([{ $match: { singer: albumSinger } }])
+      .then((docs) => {
+        if (docs.length === 0) {
+          res
+            .status(404)
+            .send({
+              message: "No tracks with the specified singer were found",
+            });
+        } else {
+          res
+            .status(200)
+            .send({ message: "Tracks successfully fetched!", tracks: docs });
+        }
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .send({
+            message: "Error occured while trying to fetch the tracks",
+            error: err,
+          });
+      });
+  }
 };
 
 //DELETE TRACK API
