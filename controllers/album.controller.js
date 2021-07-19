@@ -81,8 +81,8 @@ exports.updateAlbumById = (req, res) => {
   //Use aggregate to find the record
   Album.findById(_id)
     .then((object) => {
-      object.name = newName;
-      object.description = newDescription;
+      if(newName) object.name = newName;
+      if(newDescription) object.description = newDescription;
       object.updatedDate = new Date();
 
       object
