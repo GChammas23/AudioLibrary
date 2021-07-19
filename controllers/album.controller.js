@@ -57,9 +57,10 @@ exports.getAlbumById = (req, res) => {
         res
           .status(200)
           .send({ message: "Album successfully fetched!", result: document });
-      }
-      else {
-        res.status(404).send({message: "Could not find album with specified id!"})
+      } else {
+        res
+          .status(404)
+          .send({ message: "Could not find album with specified id!" });
       }
     })
     .catch((err) => {
@@ -78,25 +79,34 @@ exports.updateAlbumById = (req, res) => {
   const { _id } = req.body;
 
   //Use aggregate to find the record
-  Album.findById(_id).then((object) => {
-    object.name = newName;
-    object.description = newDescription;
-    object.updatedDate = new Date();
+  Album.findById(_id)
+    .then((object) => {
+      object.name = newName;
+      object.description = newDescription;
+      object.updatedDate = new Date();
 
-    object
-      .save()
-      .then((result) =>
-        res
-          .status(200)
-          .send({ message: "Album successfully updated!", result: result })
-      )
-      .catch((err) => {
-        res.status(500).send({
-          message: "Error occured while trying to update album",
+      object
+        .save()
+        .then((result) =>
+          res
+            .status(200)
+            .send({ message: "Album successfully updated!", result: result })
+        )
+        .catch((err) => {
+          res.status(500).send({
+            message: "Error occured while trying to update the album",
+            error: err,
+          });
+        });
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .send({
+          message: "Error occured while trying to find the album",
           error: err,
         });
-      });
-  });
+    });
 };
 
 exports.deleteAlbumById = (req, res) => {
