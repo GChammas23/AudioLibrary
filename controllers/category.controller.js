@@ -23,6 +23,6 @@ exports.addCategory = (req, res) => {
         .send({ message: "Category successfully added!", result: result });
     })
     .catch((err) => {
-      console.log(err);
+      res.status(500).send({message: "Error occured while trying to save the new category", error: err})
     });
 };
