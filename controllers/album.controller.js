@@ -34,10 +34,10 @@ exports.addAlbum = (req, res) => {
 exports.getAlbums = (req, res) => {
   //Get all albums from DB
   Album.find()
-    .then((albums) => {
+    .then((result) => {
       res
         .status(200)
-        .send({ message: "Albums fetched successfully!", result: albums });
+        .send({ message: "Albums fetched successfully!", albums: result });
     })
     .catch((err) => {
       res

@@ -33,15 +33,11 @@ exports.addCategory = (req, res) => {
 //GET ALL CATEGORIES
 exports.getCategories = (req, res) => {
   Category.find()
-    .then((categories) => {
-      if (categories.length !== 0) {
-        res.status(200).send({
-          message: "Categories successfully fetched!",
-          result: categories,
-        });
-      } else {
-        res.status(404).send({ message: "No categories saved!" });
-      }
+    .then((result) => {
+      res.status(200).send({
+        message: "Categories successfully fetched!",
+        categories: result,
+      });
     })
     .catch((err) => {
       res.status(500).send({
@@ -59,12 +55,10 @@ exports.getCategoryById = (req, res) => {
   Category.aggregate([{ $match: { _id: mongoose.Types.ObjectId(_id) } }])
     .then((docs) => {
       if (docs.length !== 0) {
-        res
-          .status(200)
-          .send({
-            message: "Category successfully fetched!",
-            category: docs[0],
-          });
+        res.status(200).send({
+          message: "Category successfully fetched!",
+          category: docs[0],
+        });
       } else {
         res.status(404).send({ message: "No category found!" });
       }
@@ -85,8 +79,8 @@ exports.updateCategoryById = (req, res) => {
 
   Category.findById(_id)
     .then((object) => {
-      if(newName) object.name = newName;
-      if(newDescription) object.description = newDescription;
+      if (newName) object.name = newName;
+      if (newDescription) object.description = newDescription;
       object.updatedDate = new Date();
 
       object
