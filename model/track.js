@@ -13,13 +13,13 @@ const trackSchema = new Schema({
     required: true,
   },
 
-  category: {
+  categoryId: {
     type: Schema.Types.ObjectId,
     ref: "Category",
     required: true,
   },
 
-  album: {
+  albumId: {
     type: Schema.Types.ObjectId,
     ref: "Album",
     required: true,

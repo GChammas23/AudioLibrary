@@ -15,6 +15,9 @@ app.use("/api/categories", categoryRoute);
 const albumRoutes = require("./routes/album.routes");
 app.use("/api/albums", albumRoutes);
 
+const trackRoutes = require("./routes/track.routes");
+app.use("/api/tracks", trackRoutes);
+
 //CREATE SERVER
 const server = http.createServer(app);
 const PORT = 3001;
