@@ -9,26 +9,33 @@ exports.addAlbum = (req, res) => {
   const { description } = req.body;
   const { showNumbOfTracks } = req.body;
 
-  //Create object from model with given values
-  const album = new Album({
-    name: name,
-    description: description,
-    showNbOfTracks: showNumbOfTracks,
-  });
-
-  //Save object to DB
-  album
-    .save()
-    .then((result) => {
-      res
-        .status(200)
-        .send({ message: "Album successfully added!", result: result });
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .send({ message: "Error occured while saving album!", error: err });
+  //Invalid input case
+  if (name === undefined) {
+    res
+      .status(400)
+      .send({ message: "Please make sure to give a name to the album!" });
+  } else {
+    //Create object from model with given values
+    const album = new Album({
+      name: name,
+      description: description,
+      showNbOfTracks: showNumbOfTracks,
     });
+
+    //Save object to DB
+    album
+      .save()
+      .then((result) => {
+        res
+          .status(200)
+          .send({ message: "Album successfully added!", result: result });
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .send({ message: "Error occured while saving album!", error: err });
+      });
+  }
 };
 
 //Get all albums from DB API
@@ -129,31 +136,33 @@ exports.deleteAlbumById = (req, res) => {
 };
 
 //GET NUMBER OF TRACKS FOR ALL ALBUMS
-exports.getNbOfTracks =  (req, res) => {
+exports.getNbOfTracks = (req, res) => {
   //Create an array to store results in
   var results = [];
 
   //Get list of all albums who have showNbOfTracks set to true
-  Album.aggregate([{ $match: { showNbOfTracks: true } }]).then( async (result) => {
-    if (result.length !== 0) {
-      for (let counter = 0; counter < result.length; counter++) {
-        //Loop through albums and access their _id
-        const id = result[counter]._id;
+  Album.aggregate([{ $match: { showNbOfTracks: true } }]).then(
+    async (result) => {
+      if (result.length !== 0) {
+        for (let counter = 0; counter < result.length; counter++) {
+          //Loop through albums and access their _id
+          const id = result[counter]._id;
 
-        const count = await Track.countDocuments({albumId: id});
+          const count = await Track.countDocuments({ albumId: id });
 
-        results.push({
-          albumId: id,
-          trackCount: count
-        })
+          results.push({
+            albumId: id,
+            trackCount: count,
+          });
+        }
+        res
+          .status(200)
+          .send({ message: "Tracks successfully counted!", list: results });
+      } else {
+        res.status(404).send({
+          message: "No tracks found! Make sure to set showNbOfTracks to true",
+        });
       }
-      res
-        .status(200)
-        .send({ message: "Tracks successfully counted!", list: results });
-    } else {
-      res.status(404).send({
-        message: "No tracks found! Make sure to set showNbOfTracks to true",
-      });
     }
-  });
+  );
 };

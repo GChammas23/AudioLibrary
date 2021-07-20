@@ -20,6 +20,7 @@ exports.addTrack = (req, res) => {
       .status(400)
       .send({ message: "Please make sure to enter all information needed!" });
   } else {
+    //Create track object to save
     const track = new Track({
       name: name,
       singer: singer,
@@ -27,6 +28,7 @@ exports.addTrack = (req, res) => {
       albumId: album._id,
     });
 
+    //Save the created object in DB
     track
       .save()
       .then((result) => {
@@ -35,6 +37,7 @@ exports.addTrack = (req, res) => {
           .send({ message: "Track successfully added!", result: result });
       })
       .catch((err) => {
+        //ERROR CASE 
         res.status(500).send({
           message: "Error occured while trying to add the track!",
           error: err,
@@ -62,13 +65,17 @@ exports.getAllTracks = (req, res) => {
 exports.getTrackBySinger = (req, res) => {
   //Get id from request
   const { albumSinger } = req.body;
-
+  
+  //Invalid input case
   if (albumSinger === undefined) {
     res.status(400).send({ message: "Please make sure to specify a singer!" });
-  } else {
+  } 
+  else {
+    //Use aggregate to find songs with singer as albumSinger sent
     Track.aggregate([{ $match: { singer: albumSinger } }])
       .then((docs) => {
         if (docs.length === 0) {
+        //NO RESULTS FOUND
           res
             .status(404)
             .send({
