@@ -1,5 +1,6 @@
-//Require album model to use in functions
+//Require album & track models to use in functions
 const Album = require("../model/album");
+const Track = require("../model/track");
 
 //Add album API
 exports.addAlbum = (req, res) => {
@@ -76,13 +77,15 @@ exports.updateAlbumById = (req, res) => {
   //Get values from request's body
   const { newName } = req.body;
   const { newDescription } = req.body;
+  const { showNumberOfTracks } = req.body;
   const { _id } = req.body;
 
   //Use aggregate to find the record
   Album.findById(_id)
     .then((object) => {
-      if(newName) object.name = newName;
-      if(newDescription) object.description = newDescription;
+      if (newName) object.name = newName;
+      if (newDescription) object.description = newDescription;
+      if (showNumberOfTracks) object.showNbOfTracks = showNumberOfTracks;
       object.updatedDate = new Date();
 
       object
@@ -100,12 +103,10 @@ exports.updateAlbumById = (req, res) => {
         });
     })
     .catch((err) => {
-      res
-        .status(500)
-        .send({
-          message: "Error occured while trying to find the album",
-          error: err,
-        });
+      res.status(500).send({
+        message: "Error occured while trying to find the album",
+        error: err,
+      });
     });
 };
 
@@ -125,4 +126,34 @@ exports.deleteAlbumById = (req, res) => {
         error: err,
       });
     });
+};
+
+//GET NUMBER OF TRACKS FOR ALL ALBUMS
+exports.getNbOfTracks =  (req, res) => {
+  //Create an array to store results in
+  var results = [];
+
+  //Get list of all albums who have showNbOfTracks set to true
+  Album.aggregate([{ $match: { showNbOfTracks: true } }]).then( async (result) => {
+    if (result.length !== 0) {
+      for (let counter = 0; counter < result.length; counter++) {
+        //Loop through albums and access their _id
+        const id = result[counter]._id;
+
+        const count = await Track.countDocuments({albumId: id});
+
+        results.push({
+          albumId: id,
+          trackCount: count
+        })
+      }
+      res
+        .status(200)
+        .send({ message: "Tracks successfully counted!", list: results });
+    } else {
+      res.status(404).send({
+        message: "No tracks found! Make sure to set showNbOfTracks to true",
+      });
+    }
+  });
 };
