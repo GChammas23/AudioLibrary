@@ -1,4 +1,4 @@
-//Require Category model
+//Require Category model and mongoose
 const Category = require("../model/category");
 const mongoose = require("mongoose");
 
