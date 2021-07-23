@@ -28,12 +28,12 @@ exports.addAlbum = (req, res) => {
       .then((result) => {
         res
           .status(200)
-          .send({ message: "Album successfully added!", result: result });
+          .send({ result: result });
       })
       .catch((err) => {
         res
           .status(500)
-          .send({ message: "Error occured while saving album!", error: err });
+          .send({ error: err });
       });
   }
 };
@@ -45,26 +45,26 @@ exports.getAlbums = (req, res) => {
     .then((result) => {
       res
         .status(200)
-        .send({ message: "Albums fetched successfully!", albums: result });
+        .send({albums: result});
     })
     .catch((err) => {
       res
         .status(500)
-        .send({ message: "Error occured while fetching albums", error: err });
+        .send({ error: err });
     });
 };
 
 //Get specififc album
 exports.getAlbumById = (req, res) => {
   //Get id from request's body
-  const { _id } = req.body;
+  const { id } = req.params;
 
-  Album.findById(_id)
+  Album.findById(id)
     .then((document) => {
       if (document !== null) {
         res
           .status(200)
-          .send({ message: "Album successfully fetched!", result: document });
+          .send({ result: document });
       } else {
         res
           .status(404)
@@ -73,7 +73,6 @@ exports.getAlbumById = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error occured while trying to find an album with this id",
         error: err,
       });
     });

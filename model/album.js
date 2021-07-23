@@ -19,12 +19,16 @@ const albumSchema = new Schema({
 
   createdDate: {
     type: Date,
-    default: Date.now(),
   },
 
   updatedDate: {
     type: Date,
   },
+
+  __v: {
+    type: Number,
+    select: false
+  }
 });
 
 module.exports = mongoose.model("Album", albumSchema);

@@ -24,6 +24,12 @@ const trackSchema = new Schema({
     ref: "Album",
     required: true,
   },
+
+  __v: {
+    type: Number,
+    select: false
+  }
+  
 });
 
 module.exports = mongoose.model("Track", trackSchema);
