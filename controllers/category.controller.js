@@ -12,6 +12,7 @@ exports.addCategory = (req, res) => {
   const category = new Category({
     name: name,
     description: description,
+    createdDate: new Date(),
   });
 
   //Save category to DB
@@ -37,21 +38,21 @@ exports.getCategories = (req, res) => {
 };
 
 //GET CATEGORY BY ID
-exports.getCategoryById = (req, res) => {
-  //Get id from request
-  const { _id } = req.body;
+exports.getCategoryById = async (req, res) => {
+  //Get id from url
+  const { id } = req.params;
 
-  Category.aggregate([{ $match: { _id: mongoose.Types.ObjectId(_id) } }])
-    .then((docs) => {
-      if (docs.length !== 0) {
-        res.status(200).send({ category: docs[0] });
-      } else {
-        res.status(404).send({ message: "No category found!" });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({ error: err });
-    });
+  try {
+    const category = await Category.findById(id);
+
+    if (category) {
+      res.status(200).send({ result: category }); //Category found, send it in response
+    } else {
+      res.status(404).send(); //Category not found, use status 404
+    }
+  } catch (err) {
+    res.status(500).send({ error: err }); //Error while fetching category
+  }
 };
 
 //UPDATE CATEGORY
@@ -72,15 +73,16 @@ exports.updateCategoryById = async (req, res) => {
             $set: {
               name: req.body.newName,
               description: req.body.newDescription,
+              updatedDate: new Date(),
             },
-          }
+          },
+          { omitUndefined: true } //Accept only defined values
         );
-        
+
         //Check if update was successfull
-        if(update.nModified > 0) {
+        if (update.nModified > 0) {
           res.end();
-        }
-        else {
+        } else {
           res.status(400).send(); //No update done
         }
       } catch (err) {

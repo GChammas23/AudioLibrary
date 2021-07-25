@@ -20,6 +20,7 @@ exports.addAlbum = (req, res) => {
       name: name,
       description: description,
       showNbOfTracks: showNumbOfTracks,
+      createdDate: new Date(),
     });
 
     //Save object to DB
@@ -80,24 +81,25 @@ exports.updateAlbumById = async (req, res) => {
       try {
         //Album found, now we need to update it
         const update = await Album.updateOne(
-        { _id: id },
-        {
-          $set: {
-            name: req.body.newName,
-            description: req.body.newDescription,
-            showNbOfTracks: req.body.showNumberOfTracks,
+          { _id: id },
+          {
+            $set: {
+              name: req.body.newName,
+              description: req.body.newDescription,
+              showNbOfTracks: req.body.showNumberOfTracks,
+              updatedDate: new Date(),
+            },
           },
+          { omitUndefined: true } //Make sure that only defined values are updated in the DB
+        );
+        //Check if update was successfull
+        if (update.nModified > 0) {
+          res.end();
+        } else {
+          res.status(400).send(); // No update done
         }
-      );
-      //Check if update was successfull
-      if (update.nModified > 0) {
-        res.end();
-      }
-      else {
-        res.status(400).send(); // No update done
-      }
-      }catch(err) {
-        res.status(500).send({ error: err}); //Error occured in update
+      } catch (err) {
+        res.status(500).send({ error: err }); //Error occured in update
       }
     } else {
       res.status(404).send(); // Album not found

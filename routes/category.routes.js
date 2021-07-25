@@ -7,7 +7,7 @@ const categories = require("../controllers/category.controller");
 
 router.post('/addCategory', categories.addCategory);
 router.get('/getCategories', categories.getCategories);
-router.post('/getCategoryById/:id', categories.getCategoryById);
+router.get('/getCategoryById/:id', categories.getCategoryById);
 router.put('/updateCategoryById/:id', categories.updateCategoryById);
 router.delete('/deleteCategoryById/:id', categories.deleteCategoryById);
 
