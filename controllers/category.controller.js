@@ -20,13 +20,10 @@ exports.addCategory = (req, res) => {
     .then((result) => {
       res
         .status(200)
-        .send({ message: "Category successfully added!", result: result });
+        .send({ result: result });
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error occured while trying to save the new category",
-        error: err,
-      });
+      res.status(500).send({error: err});
     });
 };
 
@@ -34,16 +31,10 @@ exports.addCategory = (req, res) => {
 exports.getCategories = (req, res) => {
   Category.find()
     .then((result) => {
-      res.status(200).send({
-        message: "Categories successfully fetched!",
-        categories: result,
-      });
+      res.status(200).send({categories: result});
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error occured while trying to fetch the catgeory",
-        error: err,
-      });
+      res.status(500).send({error: err});
     });
 };
 
@@ -55,10 +46,7 @@ exports.getCategoryById = (req, res) => {
   Category.aggregate([{ $match: { _id: mongoose.Types.ObjectId(_id) } }])
     .then((docs) => {
       if (docs.length !== 0) {
-        res.status(200).send({
-          message: "Category successfully fetched!",
-          category: docs[0],
-        });
+        res.status(200).send({category: docs[0]});
       } else {
         res.status(404).send({ message: "No category found!" });
       }
@@ -66,7 +54,7 @@ exports.getCategoryById = (req, res) => {
     .catch((err) => {
       res
         .status(500)
-        .send({ message: "Error occured while fetching category", error: err });
+        .send({error: err });
     });
 };
 
@@ -87,20 +75,17 @@ exports.updateCategoryById = (req, res) => {
         .save()
         .then((result) => {
           res.status(200).send({
-            message: "Category successfully updated!",
             result: result,
           });
         })
         .catch((err) => {
           res.status(500).send({
-            message: "Error occured while trying to save the category",
             error: err,
           });
         });
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error occured while trying to find the category",
         error: err,
       });
     });
@@ -115,11 +100,10 @@ exports.deleteCategoryById = (req, res) => {
     .then((result) => {
       res
         .status(200)
-        .send({ message: "Category successfully deleted!", result: result });
+        .send({result: result });
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error occured while trying to delete the category",
         error: err,
       });
     });

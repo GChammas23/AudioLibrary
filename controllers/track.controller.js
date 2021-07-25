@@ -35,12 +35,11 @@ exports.addTrack = (req, res) => {
       .then((result) => {
         res
           .status(200)
-          .send({ message: "Track successfully added!", result: result });
+          .send({ result: result });
       })
       .catch((err) => {
         //ERROR CASE
         res.status(500).send({
-          message: "Error occured while trying to add the track!",
           error: err,
         });
       });
@@ -53,12 +52,12 @@ exports.getAllTracks = (req, res) => {
     .then((result) => {
       res
         .status(200)
-        .send({ message: "Tracks fetched successfully!", tracks: result });
+        .send({ tracks: result });
     })
     .catch((err) => {
       res
         .status(500)
-        .send({ message: "Error while trying to fetch tracks", error: err });
+        .send({ error: err });
     });
 };
 
@@ -82,12 +81,11 @@ exports.getTrackBySinger = (req, res) => {
         } else {
           res
             .status(200)
-            .send({ message: "Tracks successfully fetched!", tracks: docs });
+            .send({tracks: docs });
         }
       })
       .catch((err) => {
         res.status(500).send({
-          message: "Error occured while trying to fetch the tracks",
           error: err,
         });
       });
@@ -133,28 +131,23 @@ exports.updateTrackById = (req, res) => {
                 .save()
                 .then((result) => {
                   res.status(200).send({
-                    message: "Track successfully updated!",
                     result: result,
                   });
                 })
                 .catch((err) => {
                   res.status(500).send({
-                    message: "Error while trying to update the track",
                     error: err,
                   });
                 });
             })
             .catch((err) => {
               res.status(500).send({
-                message: "Could not update album related to track",
                 error: err,
               });
             });
         })
         .catch((err) => {
           res.status(500).send({
-            message:
-              "Error occured while trying to fetch album related to the song",
             error: err,
           });
         });
@@ -172,11 +165,10 @@ exports.deleteTrackById = (req, res) => {
     .then((result) => {
       res
         .status(200)
-        .send({ message: "Track successfully deleted!", result: result });
+        .send({result: result });
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error occured while trying to delete the track",
         error: err,
       });
     });

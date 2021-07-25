@@ -26,14 +26,10 @@ exports.addAlbum = (req, res) => {
     album
       .save()
       .then((result) => {
-        res
-          .status(200)
-          .send({ result: result });
+        res.status(200).send({ result: result });
       })
       .catch((err) => {
-        res
-          .status(500)
-          .send({ error: err });
+        res.status(500).send({ error: err });
       });
   }
 };
@@ -43,14 +39,10 @@ exports.getAlbums = (req, res) => {
   //Get all albums from DB
   Album.find()
     .then((result) => {
-      res
-        .status(200)
-        .send({albums: result});
+      res.status(200).send({ albums: result });
     })
     .catch((err) => {
-      res
-        .status(500)
-        .send({ error: err });
+      res.status(500).send({ error: err });
     });
 };
 
@@ -62,9 +54,7 @@ exports.getAlbumById = (req, res) => {
   Album.findById(id)
     .then((document) => {
       if (document !== null) {
-        res
-          .status(200)
-          .send({ result: document });
+        res.status(200).send({ result: document });
       } else {
         res
           .status(404)
@@ -122,15 +112,10 @@ exports.deleteAlbumById = (req, res) => {
 
   Album.findByIdAndDelete(_id)
     .then((result) => {
-      res
-        .status(200)
-        .send({ message: "Album successfully deleted!", result: result });
+      res.status(200).send({ result: result });
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error occured while trying to delete specified album",
-        error: err,
-      });
+      res.status(500).send({error: err});
     });
 };
 
@@ -156,7 +141,7 @@ exports.getNbOfTracks = (req, res) => {
         }
         res
           .status(200)
-          .send({ message: "Tracks successfully counted!", list: results });
+          .send({list: results });
       } else {
         res.status(404).send({
           message: "No tracks found! Make sure to set showNbOfTracks to true",
