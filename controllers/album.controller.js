@@ -69,54 +69,58 @@ exports.getAlbumById = (req, res) => {
 };
 
 //Update album API
-exports.updateAlbumById = (req, res) => {
-  //Get values from request's body
-  const { newName } = req.body;
-  const { newDescription } = req.body;
-  const { showNumberOfTracks } = req.body;
-  const { _id } = req.body;
+exports.updateAlbumById = async (req, res) => {
+  //Get id from url
+  const { id } = req.params;
 
-  //Use aggregate to find the record
-  Album.findById(_id)
-    .then((object) => {
-      if (newName) object.name = newName;
-      if (newDescription) object.description = newDescription;
-      if (showNumberOfTracks) object.showNbOfTracks = showNumberOfTracks;
-      object.updatedDate = new Date();
-
-      object
-        .save()
-        .then((result) =>
-          res
-            .status(200)
-            .send({ message: "Album successfully updated!", result: result })
-        )
-        .catch((err) => {
-          res.status(500).send({
-            message: "Error occured while trying to update the album",
-            error: err,
-          });
-        });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error occured while trying to find the album",
-        error: err,
-      });
-    });
+  //Find the album first
+  try {
+    const album = await Album.findById({ _id: id });
+    if (album) {
+      try {
+        //Album found, now we need to update it
+        const update = await Album.updateOne(
+        { _id: id },
+        {
+          $set: {
+            name: req.body.newName,
+            description: req.body.newDescription,
+            showNbOfTracks: req.body.showNumberOfTracks,
+          },
+        }
+      );
+      //Check if update was successfull
+      if (update.nModified > 0) {
+        res.end();
+      }
+      else {
+        res.status(400).send(); // No update done
+      }
+      }catch(err) {
+        res.status(500).send({ error: err}); //Error occured in update
+      }
+    } else {
+      res.status(404).send(); // Album not found
+    }
+  } catch (err) {
+    res.status(500).send({ error: err }); //Error occured in find
+  }
 };
 
-exports.deleteAlbumById = (req, res) => {
+exports.deleteAlbumById = async (req, res) => {
   //Get id from request's body
-  const { _id } = req.body;
+  const { id } = req.params;
 
-  Album.findByIdAndDelete(_id)
-    .then((result) => {
-      res.status(200).send({ result: result });
-    })
-    .catch((err) => {
-      res.status(500).send({error: err});
-    });
+  try {
+    const deleteAlbum = await Album.deleteOne({ _id: id });
+    if (deleteAlbum.deletedCount > 0) {
+      res.end();
+    } else {
+      res.status(404).send();
+    }
+  } catch (err) {
+    res.status(500).send({ error: err });
+  }
 };
 
 //GET NUMBER OF TRACKS FOR ALL ALBUMS
@@ -139,9 +143,7 @@ exports.getNbOfTracks = (req, res) => {
             trackCount: count,
           });
         }
-        res
-          .status(200)
-          .send({list: results });
+        res.status(200).send({ list: results });
       } else {
         res.status(404).send({
           message: "No tracks found! Make sure to set showNbOfTracks to true",

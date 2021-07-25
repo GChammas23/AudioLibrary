@@ -1,6 +1,7 @@
 //Require track & album models to use
 const Track = require("../model/track");
 const Album = require("../model/album");
+const { Schema, Mongoose } = require("mongoose");
 
 //ADD TRACK API
 exports.addTrack = (req, res) => {
@@ -33,9 +34,7 @@ exports.addTrack = (req, res) => {
     track
       .save()
       .then((result) => {
-        res
-          .status(200)
-          .send({ result: result });
+        res.status(200).send({ result: result });
       })
       .catch((err) => {
         //ERROR CASE
@@ -50,14 +49,10 @@ exports.addTrack = (req, res) => {
 exports.getAllTracks = (req, res) => {
   Track.find()
     .then((result) => {
-      res
-        .status(200)
-        .send({ tracks: result });
+      res.status(200).send({ tracks: result });
     })
     .catch((err) => {
-      res
-        .status(500)
-        .send({ error: err });
+      res.status(500).send({ error: err });
     });
 };
 
@@ -79,9 +74,7 @@ exports.getTrackBySinger = (req, res) => {
             message: "No tracks with the specified singer were found",
           });
         } else {
-          res
-            .status(200)
-            .send({tracks: docs });
+          res.status(200).send({ tracks: docs });
         }
       })
       .catch((err) => {
@@ -156,20 +149,20 @@ exports.updateTrackById = (req, res) => {
 };
 
 //DELETE TRACK API
-exports.deleteTrackById = (req, res) => {
+exports.deleteTrackById = async (req, res) => {
   //Get track id from request
-  const { _id } = req.body;
+  const { id } = req.params;
 
   //Delete track by id and return response
-  Track.findOneAndDelete(_id)
-    .then((result) => {
-      res
-        .status(200)
-        .send({result: result });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        error: err,
-      });
-    });
+  try {
+    const deleteTrack = await Track.deleteOne({ _id: id });
+    if (deleteTrack.deletedCount > 0) {
+      res.end();
+    }
+    else {
+      res.status(404).send();
+    }
+  } catch (err) {
+    res.status(500).send({ error: err });
+  }
 };

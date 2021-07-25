@@ -9,7 +9,7 @@ router.post('/addAlbum', albums.addAlbum);
 router.get('/getAlbums', albums.getAlbums);
 router.get('/getNbOfTracks', albums.getNbOfTracks);
 router.get('/album/:id', albums.getAlbumById);
-router.put('/updateAlbumById', albums.updateAlbumById);
+router.put('/updateAlbumById/:id', albums.updateAlbumById);
 router.delete('/deleteAlbum', albums.deleteAlbumById);
 
 module.exports = router;

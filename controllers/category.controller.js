@@ -18,12 +18,10 @@ exports.addCategory = (req, res) => {
   category
     .save()
     .then((result) => {
-      res
-        .status(200)
-        .send({ result: result });
+      res.status(200).send({ result: result });
     })
     .catch((err) => {
-      res.status(500).send({error: err});
+      res.status(500).send({ error: err });
     });
 };
 
@@ -31,10 +29,10 @@ exports.addCategory = (req, res) => {
 exports.getCategories = (req, res) => {
   Category.find()
     .then((result) => {
-      res.status(200).send({categories: result});
+      res.status(200).send({ categories: result });
     })
     .catch((err) => {
-      res.status(500).send({error: err});
+      res.status(500).send({ error: err });
     });
 };
 
@@ -46,65 +44,70 @@ exports.getCategoryById = (req, res) => {
   Category.aggregate([{ $match: { _id: mongoose.Types.ObjectId(_id) } }])
     .then((docs) => {
       if (docs.length !== 0) {
-        res.status(200).send({category: docs[0]});
+        res.status(200).send({ category: docs[0] });
       } else {
         res.status(404).send({ message: "No category found!" });
       }
     })
     .catch((err) => {
-      res
-        .status(500)
-        .send({error: err });
+      res.status(500).send({ error: err });
     });
 };
 
 //UPDATE CATEGORY
-exports.updateCategoryById = (req, res) => {
-  //Get new values from request's body
-  const { newName } = req.body;
-  const { newDescription } = req.body;
-  const { _id } = req.body;
+exports.updateCategoryById = async (req, res) => {
+  //Get id from url
+  const { id } = req.params;
 
-  Category.findById(_id)
-    .then((object) => {
-      if (newName) object.name = newName;
-      if (newDescription) object.description = newDescription;
-      object.updatedDate = new Date();
+  //Find category first
+  try {
+    const category = await Category.findById(id);
 
-      object
-        .save()
-        .then((result) => {
-          res.status(200).send({
-            result: result,
-          });
-        })
-        .catch((err) => {
-          res.status(500).send({
-            error: err,
-          });
-        });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        error: err,
-      });
-    });
+    if (category) {
+      //Category found, now update it
+      try {
+        const update = await Category.updateOne(
+          { _id: id },
+          {
+            $set: {
+              name: req.body.newName,
+              description: req.body.newDescription,
+            },
+          }
+        );
+        
+        //Check if update was successfull
+        if(update.nModified > 0) {
+          res.end();
+        }
+        else {
+          res.status(400).send(); //No update done
+        }
+      } catch (err) {
+        res.status(500).send({ error: err }); //Error while updating the category
+      }
+    } else {
+      //Category not found
+      res.status(404).send();
+    }
+  } catch (err) {
+    res.status(500).send({ error: err }); //Error while finding the category
+  }
 };
 
 //DELETE CATEGORY
-exports.deleteCategoryById = (req, res) => {
+exports.deleteCategoryById = async (req, res) => {
   //Get id from request's body
-  const { _id } = req.body;
+  const { id } = req.params;
 
-  Category.findByIdAndDelete(_id)
-    .then((result) => {
-      res
-        .status(200)
-        .send({result: result });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        error: err,
-      });
-    });
+  try {
+    const deleteCategory = await Category.deleteOne({ _id: id });
+    if (deleteCategory.deletedCount > 0) {
+      res.end();
+    } else {
+      res.status(404).send();
+    }
+  } catch (err) {
+    res.status(500).send({ error: err });
+  }
 };
