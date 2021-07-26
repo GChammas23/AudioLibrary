@@ -1,9 +1,8 @@
-//Require Category model and mongoose
+//Require Category model
 const Category = require("../model/category");
-const mongoose = require("mongoose");
 
 //ADD CATEGORY API
-exports.addCategory = (req, res) => {
+exports.addCategory = async (req, res) => {
   //Extract values from request's body
   const { name } = req.body;
   const { description } = req.body;
@@ -16,25 +15,28 @@ exports.addCategory = (req, res) => {
   });
 
   //Save category to DB
-  category
-    .save()
-    .then((result) => {
-      res.status(200).send({ result: result });
-    })
-    .catch((err) => {
-      res.status(500).send({ error: err });
-    });
+  try {
+    const result = await category.save();
+    res.status(200).send({category: result});
+  }catch(err) {
+    res.status(500).send({ error: err});
+  }
 };
 
 //GET ALL CATEGORIES
-exports.getCategories = (req, res) => {
-  Category.find()
-    .then((result) => {
-      res.status(200).send({ categories: result });
-    })
-    .catch((err) => {
-      res.status(500).send({ error: err });
-    });
+exports.getCategories = async (req, res) => {
+  try {
+    const result = await Category.find();
+    
+    if (result.length > 0) {
+      res.status(200).send({categories: result});
+    }
+    else {
+      res.status(404).send();
+    }
+  }catch(err) {
+    res.status(500).send({ error: err});
+  }
 };
 
 //GET CATEGORY BY ID

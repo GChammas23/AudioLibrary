@@ -3,7 +3,7 @@ const Album = require("../model/album");
 const Track = require("../model/track");
 
 //Add album API
-exports.addAlbum = (req, res) => {
+exports.addAlbum = async (req, res) => {
   //Extract values from request's body
   const { name } = req.body;
   const { description } = req.body;
@@ -24,49 +24,47 @@ exports.addAlbum = (req, res) => {
     });
 
     //Save object to DB
-    album
-      .save()
-      .then((result) => {
-        res.status(200).send({ result: result });
-      })
-      .catch((err) => {
-        res.status(500).send({ error: err });
-      });
+    try {
+      const result = await album.save();
+      res.status(200).send({ album: result });
+    } catch (err) {
+      res.status(500).send({ error: err });
+    }
   }
 };
 
 //Get all albums from DB API
-exports.getAlbums = (req, res) => {
+exports.getAlbums = async (req, res) => {
   //Get all albums from DB
-  Album.find()
-    .then((result) => {
+  try {
+    const result = await Album.find();
+
+    if (result.length > 0) {
       res.status(200).send({ albums: result });
-    })
-    .catch((err) => {
-      res.status(500).send({ error: err });
-    });
+    } else {
+      res.status(404).send();
+    }
+  } catch (err) {
+    res.status(500).send({ error: err });
+  }
 };
 
 //Get specififc album
-exports.getAlbumById = (req, res) => {
+exports.getAlbumById = async (req, res) => {
   //Get id from request's body
   const { id } = req.params;
 
-  Album.findById(id)
-    .then((document) => {
-      if (document !== null) {
-        res.status(200).send({ result: document });
-      } else {
-        res
-          .status(404)
-          .send({ message: "Could not find album with specified id!" });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        error: err,
-      });
-    });
+  try {
+    const album = await Album.findById(id);
+
+    if (album) {
+      res.status(200).send({ result: album }); //Album found, send it in response
+    } else {
+      res.status(404).send(); //No Album found
+    }
+  } catch (err) {
+    res.status(500).send({ error: err }); //Error while fetching album
+  }
 };
 
 //Update album API

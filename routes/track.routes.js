@@ -9,6 +9,6 @@ router.post("/addTrack", tracks.addTrack);
 router.get("/getTracks", tracks.getAllTracks);
 router.post("/getTrackBySinger", tracks.getTrackBySinger);
 router.delete("/deleteTrackById/:id", tracks.deleteTrackById);
-router.put("/updateTrackById", tracks.updateTrackById);
+router.put("/updateTrackById/:id", tracks.updateTrackById);
 
 module.exports = router;
