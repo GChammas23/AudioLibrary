@@ -5,10 +5,10 @@ const router = express.Router();
 //Require track services to access methods
 const tracks = require("../controllers/track.controller");
 
-router.post("/addTrack", tracks.addTrack);
-router.get("/getTracks", tracks.getAllTracks);
-router.post("/getTrackBySinger", tracks.getTrackBySinger);
-router.delete("/deleteTrackById/:id", tracks.deleteTrackById);
-router.put("/updateTrackById/:id", tracks.updateTrackById);
+router.post("/track", tracks.addTrack);
+router.get("/track", tracks.getAllTracks);
+router.post("/track/getTrackBySinger", tracks.getTrackBySinger);
+router.delete("/track/:id", tracks.deleteTrackById);
+router.put("/track/:id", tracks.updateTrackById);
 
 module.exports = router;

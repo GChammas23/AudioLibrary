@@ -5,10 +5,10 @@ const router = express.Router();
 //Require category services to access methods
 const categories = require("../controllers/category.controller");
 
-router.post('/addCategory', categories.addCategory);
-router.get('/getCategories', categories.getCategories);
-router.get('/getCategoryById/:id', categories.getCategoryById);
-router.put('/updateCategoryById/:id', categories.updateCategoryById);
-router.delete('/deleteCategoryById/:id', categories.deleteCategoryById);
+router.post('/category', categories.addCategory);
+router.get('/category', categories.getCategories);
+router.get('/category/:id', categories.getCategoryById);
+router.put('/category/:id', categories.updateCategoryById);
+router.delete('/category/:id', categories.deleteCategoryById);
 
 module.exports = router;
