@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 
+//Setup dotenv
+require("dotenv").config();
+
 //SETUP MIDDLEWARE
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,7 +32,7 @@ const PORT = 3001;
 //ADD LISTENER TO PORT
 mongoose
   .connect(
-    "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+    process.env.DB_URL,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
