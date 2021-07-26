@@ -20,6 +20,9 @@ app.use("/api", albumRoutes);
 const trackRoutes = require("./routes/track.routes");
 app.use("/api", trackRoutes);
 
+const userRoutes = require("./routes/user.routes");
+app.use("/api", userRoutes);
+
 //CREATE SERVER
 const PORT = 3001;
 
