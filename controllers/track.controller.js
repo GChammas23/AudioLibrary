@@ -134,10 +134,23 @@ exports.deleteTrackById = async (req, res) => {
 
   //Delete track by id and return response
   try {
-    const deleteTrack = await Track.deleteOne({ _id: id });
-    if (deleteTrack.deletedCount > 0) {
-      res.end();
-    } else {
+    //First try to find the track
+    const track = await Track.findById(id);
+
+    if (track) {
+      //Track found, now delete it
+      const deleteTrack = await Track.deleteOne({ _id: id });
+
+      if (deleteTrack.deletedCount > 0) {
+        //Delete successfull
+        res.end();
+      }
+      else {
+        //Error in deletion
+        res.status(500).send();
+      }
+    }else {
+      //No track found
       res.status(404).send();
     }
   } catch (err) {

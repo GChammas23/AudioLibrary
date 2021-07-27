@@ -88,7 +88,7 @@ exports.login = async (req, res) => {
             email: req.body.email,
             id: result._id.toString(),
           },
-          "secretKeyToBeUsedForTheJWTToken",
+          process.env.JWT_SECRET,
           { expiresIn: "1h" }
         );
 

@@ -112,10 +112,21 @@ exports.deleteAlbumById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deleteAlbum = await Album.deleteOne({ _id: id });
-    if (deleteAlbum.deletedCount > 0) {
-      res.end();
+    //Find album first
+    const album = await Album.findById(id);
+
+    if (album) {
+      //Album found, now delete it
+      const deleteAlbum = await Album.deleteOne({ _id: id });
+
+      if (deleteAlbum.deletedCount > 0) {
+        res.end();
+      } else {
+        res.status(500).send();
+      }
+      
     } else {
+      //No album found
       res.status(404).send();
     }
   } catch (err) {

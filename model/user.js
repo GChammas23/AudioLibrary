@@ -20,7 +20,6 @@ const userSchema = new Schema({
 
   registrationDate: {
     type: Date,
-    required: true,
   },
 
   __v: {

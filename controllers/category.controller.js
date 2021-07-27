@@ -17,9 +17,9 @@ exports.addCategory = async (req, res) => {
   //Save category to DB
   try {
     const result = await category.save();
-    res.status(200).send({category: result});
-  }catch(err) {
-    res.status(500).send({ error: err});
+    res.status(200).send({ category: result });
+  } catch (err) {
+    res.status(500).send({ error: err });
   }
 };
 
@@ -27,15 +27,14 @@ exports.addCategory = async (req, res) => {
 exports.getCategories = async (req, res) => {
   try {
     const result = await Category.find();
-    
+
     if (result.length > 0) {
-      res.status(200).send({categories: result});
-    }
-    else {
+      res.status(200).send({ categories: result });
+    } else {
       res.status(404).send();
     }
-  }catch(err) {
-    res.status(500).send({ error: err});
+  } catch (err) {
+    res.status(500).send({ error: err });
   }
 };
 
@@ -105,10 +104,21 @@ exports.deleteCategoryById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deleteCategory = await Category.deleteOne({ _id: id });
-    if (deleteCategory.deletedCount > 0) {
-      res.end();
+    //Find category first
+    const category = await Category.findById(id);
+
+    if (category) {
+      //Category found, now delete it
+      const deleteCategory = await Category.deleteOne({ _id: id });
+
+      if (deleteCategory.deletedCount > 0) {
+        res.end();
+      } else {
+        res.status(500).send();
+      }
+      
     } else {
+      //No category found
       res.status(404).send();
     }
   } catch (err) {
