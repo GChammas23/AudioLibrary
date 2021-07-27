@@ -157,3 +157,6 @@ exports.deleteTrackById = async (req, res) => {
     res.status(500).send({ error: err });
   }
 };
+
+exports.getSortedTracksByCategory = async (req, res) => {
+}
