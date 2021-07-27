@@ -1,5 +1,6 @@
-//Require Category model
+//Require Category & Track models
 const Category = require("../model/category");
+const Track = require("../model/track");
 
 //ADD CATEGORY API
 exports.addCategory = async (req, res) => {
@@ -108,15 +109,22 @@ exports.deleteCategoryById = async (req, res) => {
     const category = await Category.findById(id);
 
     if (category) {
-      //Category found, now delete it
-      const deleteCategory = await Category.deleteOne({ _id: id });
+      //Check if category has any tracks related to it
+      const tracks = await Track.find({ categoryId: id });
 
-      if (deleteCategory.deletedCount > 0) {
-        res.end();
+      if (tracks.length > 0) {
+        //Tracks found, can't delete
+        res.status(403).send();
       } else {
-        res.status(500).send();
+        //No tracks found, now delete category
+        const deleteCategory = await Category.deleteOne({ _id: id });
+
+        if (deleteCategory.deletedCount > 0) {
+          res.end();
+        } else {
+          res.status(500).send();
+        }
       }
-      
     } else {
       //No category found
       res.status(404).send();
