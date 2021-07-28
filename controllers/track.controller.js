@@ -1,6 +1,7 @@
-//Require track & album models to use
+//Require track & album & category models to use
 const Track = require("../model/track");
 const Album = require("../model/album");
+const Category = require("../model/category");
 
 //ADD TRACK API
 exports.addTrack = async (req, res) => {
@@ -159,4 +160,55 @@ exports.deleteTrackById = async (req, res) => {
 };
 
 exports.getSortedTracksByCategory = async (req, res) => {
+  //Check if we have a category id sent in the request
+  if (Object.keys(req.query).length > 0) {
+    //Get all songs in album with given category
+    try {
+      //Check for album first
+      const album = await Album.findById(req.params.albumId);
+
+      if (album) {
+        //Album found, now check category
+        const category = await Category.findById(req.query[Object.keys(req.query)[0]]);
+
+        if (category) {
+          //Category found, now find tracks
+          const tracks = await Track.find({albumId: req.params.albumId, categoryId: req.query[Object.keys(req.query)[0]]});
+          
+          res.status(200).send({ result: tracks});
+        }
+        else {
+          //Category not found
+          res.status(404).send({message: "Category not found"})
+        }
+      }
+      else {
+        //Album not found
+        res.status(404).send({message: "Album not found"})
+      }
+    }catch(err) {
+      res.status(500).send({ error: err });
+    }
+  }
+  else {
+    //Get all songs in album 
+    try {
+      //Find album first
+      const album = await Album.findById(req.params.albumId);
+
+      if (album) {
+        //Album found, now get all songs and return them in response
+
+        const tracks = await Track.find({albumId: req.params.albumId});
+
+        res.status(200).send({result: tracks});
+      }
+      else {
+        //Album not found
+        res.status(404).send();
+      }
+    }catch(err) {
+      res.status(500).send({ error: err });
+    }
+  }
 }
