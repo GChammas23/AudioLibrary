@@ -49,7 +49,7 @@ exports.getAlbums = async (req, res) => {
   }
 };
 
-//Get specififc album
+//Get specific album
 exports.getAlbumById = async (req, res) => {
   //Get id from request's body
   const { id } = req.params;
@@ -90,20 +90,20 @@ exports.updateAlbumById = async (req, res) => {
           },
           { omitUndefined: true } //Make sure that only defined values are updated in the DB
         );
-        //Check if update was successfull
+        //Check if update was successful
         if (update.nModified > 0) {
           res.end();
         } else {
           res.status(400).send(); // No update done
         }
       } catch (err) {
-        res.status(500).send({ error: err }); //Error occured in update
+        res.status(500).send({ error: err }); //Error occurred in update
       }
     } else {
       res.status(404).send(); // Album not found
     }
   } catch (err) {
-    res.status(500).send({ error: err }); //Error occured in find
+    res.status(500).send({ error: err }); //Error occurred in find
   }
 };
 

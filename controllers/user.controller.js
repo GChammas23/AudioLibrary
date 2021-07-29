@@ -46,7 +46,7 @@ exports.createUser = async (req, res) => {
           const sendMail = await transporter.sendMail({
             to: req.body.email,
             from: "audioLibrary2380@gmail.com",
-            subject: "Sign up successfull!",
+            subject: "Sign up successful!",
             text: `Welcome to AudioLibrary ${req.body.name}!`,
           });
 
@@ -57,7 +57,7 @@ exports.createUser = async (req, res) => {
             res.status(500).send();
           }
         } else {
-          //Password not hached
+          //Password not hashed
           res.status(500).send();
         }
       } else {

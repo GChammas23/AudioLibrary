@@ -110,7 +110,7 @@ exports.updateTrackById = async (req, res) => {
             { omitUndefined: true }
           );
           
-          //Check if update is successfull
+          //Check if update is successful
           if (update.nModified > 0) {
             res.end();
           }else {
@@ -143,7 +143,7 @@ exports.deleteTrackById = async (req, res) => {
       const deleteTrack = await Track.deleteOne({ _id: id });
 
       if (deleteTrack.deletedCount > 0) {
-        //Delete successfull
+        //Delete successful
         res.end();
       }
       else {

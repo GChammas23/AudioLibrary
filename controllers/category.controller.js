@@ -81,7 +81,7 @@ exports.updateCategoryById = async (req, res) => {
           { omitUndefined: true } //Accept only defined values
         );
 
-        //Check if update was successfull
+        //Check if update was successful
         if (update.nModified > 0) {
           res.end();
         } else {
