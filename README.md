@@ -1,5 +1,5 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/GChammas23/AudioLibrary)
-![npm](https://img.shields.io/npm/v/npm)
+[![npm](https://img.shields.io/npm/v/npm)](https://www.npmjs.com/package/npm)
 
 # AudioLibrary
 
