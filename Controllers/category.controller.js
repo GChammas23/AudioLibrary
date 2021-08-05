@@ -4,14 +4,10 @@ const Track = require("../Models/track");
 
 //ADD CATEGORY API
 exports.addCategory = async (req, res) => {
-  //Extract values from request's body
-  const { name } = req.body;
-  const { description } = req.body;
-
   //Create object from model with given values
   const category = new Category({
-    name: name,
-    description: description,
+    name: req.body.name,
+    description: req.body.description,
     createdDate: new Date(),
   });
 
@@ -29,11 +25,8 @@ exports.getCategories = async (req, res) => {
   try {
     const result = await Category.find();
 
-    if (result.length > 0) {
-      res.status(200).send({ categories: result });
-    } else {
-      res.status(404).send();
-    }
+    res.status(200).send({result: result});
+
   } catch (err) {
     res.status(500).send({ error: err });
   }
@@ -81,12 +74,7 @@ exports.updateCategoryById = async (req, res) => {
           { omitUndefined: true } //Accept only defined values
         );
 
-        //Check if update was successful
-        if (update.nModified > 0) {
-          res.end();
-        } else {
-          res.status(400).send(); //No update done
-        }
+        res.end();
       } catch (err) {
         res.status(500).send({ error: err }); //Error while updating the category
       }
@@ -119,11 +107,7 @@ exports.deleteCategoryById = async (req, res) => {
         //No tracks found, now delete category
         const deleteCategory = await Category.deleteOne({ _id: id });
 
-        if (deleteCategory.deletedCount > 0) {
-          res.end();
-        } else {
-          res.status(500).send();
-        }
+        res.end();
       }
     } else {
       //No category found

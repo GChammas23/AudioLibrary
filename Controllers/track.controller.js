@@ -5,18 +5,10 @@ const Category = require("../Models/category");
 
 //ADD TRACK API
 exports.addTrack = async (req, res) => {
-  //Extract values from request
-  const { name } = req.body;
-  const { singer } = req.body;
-  const { category } = req.body; //Represents category object in request
-  const { album } = req.body; //Represents album object in request
-
   //Check for any missing input that is required
   if (
-    name === undefined ||
-    singer === undefined ||
-    category === undefined ||
-    album === undefined
+    req.body.name === undefined ||
+    req.body.singer === undefined
   ) {
     res
       .status(400)
@@ -24,10 +16,10 @@ exports.addTrack = async (req, res) => {
   } else {
     //Create track object to save
     const track = new Track({
-      name: name,
-      singer: singer,
-      categoryId: category._id,
-      albumId: album._id,
+      name: req.body.name,
+      singer: req.body.singer,
+      categoryId: req.params.categoryId,
+      albumId: req.params.albumId,
     });
 
     //Save the created object in DB
@@ -45,11 +37,7 @@ exports.getAllTracks = async (req, res) => {
   try {
     const result = await Track.find();
 
-    if (result.length > 0) {
-      res.status(200).send({ tracks: result });
-    } else {
-      res.status(404).send();
-    }
+    res.status(200).send({ result: result });
   } catch (err) {
     res.status(500).send({ error: err });
   }
@@ -57,18 +45,15 @@ exports.getAllTracks = async (req, res) => {
 
 //GET TRACK BY SINGER API
 exports.getTrackBySinger = async (req, res) => {
-  //Get id from request
-  const { albumSinger } = req.body;
-
   //Invalid input case
-  if (!albumSinger) {
+  if (!req.body.singer) {
     res.status(400).send();
   } else {
     //Find the album with the specified singer
-    const result = await Track.find({ singer: albumSinger });
+    const result = await Track.find({ singer: req.body.singer });
 
     if (result) {
-      res.status(200).send({ album: result });
+      res.status(200).send({ result: result });
     } else {
       res.status(404).send();
     }
@@ -81,9 +66,9 @@ exports.updateTrackById = async (req, res) => {
   const { id } = req.params;
 
   if (
-    req.body.newName === undefined &&
-    req.body.newSinger === undefined &&
-    req.body.newCategory === undefined &&
+    req.body.name === undefined &&
+    req.body.singer === undefined &&
+    req.body.category === undefined &&
     req.body.newAlbum === undefined
   ) {
     res
@@ -97,7 +82,7 @@ exports.updateTrackById = async (req, res) => {
       if (track) {
         //Track found, now update it
         try {
-          const update = await Track.updateOne(
+          await Track.updateOne(
             { _id: id },
             {
               $set: {
@@ -109,13 +94,8 @@ exports.updateTrackById = async (req, res) => {
             },
             { omitUndefined: true }
           );
-          
-          //Check if update is successful
-          if (update.nModified > 0) {
-            res.end();
-          }else {
-            res.status(400).send(); //No update done
-          }
+
+          res.end();
         } catch (err) {
           res.status(500).send({ error: err });
         }
@@ -140,17 +120,10 @@ exports.deleteTrackById = async (req, res) => {
 
     if (track) {
       //Track found, now delete it
-      const deleteTrack = await Track.deleteOne({ _id: id });
+      await Track.deleteOne({ _id: id });
 
-      if (deleteTrack.deletedCount > 0) {
-        //Delete successful
-        res.end();
-      }
-      else {
-        //Error in deletion
-        res.status(500).send();
-      }
-    }else {
+      res.end();
+    } else {
       //No track found
       res.status(404).send();
     }
@@ -160,55 +133,51 @@ exports.deleteTrackById = async (req, res) => {
 };
 
 exports.getSortedTracksByCategory = async (req, res) => {
-  //Check if we have a category id sent in the request
-  if (Object.keys(req.query).length > 0) {
-    //Get all songs in album with given category
-    try {
+  //Get all songs in album with given category
+  try {
+    //Check if we have a category id sent in the request
+    if (Object.keys(req.query).length > 0) {
       //Check for album first
       const album = await Album.findById(req.params.albumId);
 
       if (album) {
         //Album found, now check category
-        const category = await Category.findById(req.query[Object.keys(req.query)[0]]);
+        const category = await Category.findById(
+          req.query[Object.keys(req.query)[0]]
+        );
 
         if (category) {
           //Category found, now find tracks
-          const tracks = await Track.find({albumId: req.params.albumId, categoryId: req.query[Object.keys(req.query)[0]]});
-          
-          res.status(200).send({ result: tracks});
-        }
-        else {
+          const tracks = await Track.find({
+            albumId: req.params.albumId,
+            categoryId: req.query[Object.keys(req.query)[0]],
+          });
+
+          res.status(200).send({ result: tracks });
+        } else {
           //Category not found
-          res.status(404).send({message: "Category not found"})
+          res.status(404).send({ message: "Category not found" });
         }
-      }
-      else {
+      } else {
         //Album not found
-        res.status(404).send({message: "Album not found"})
+        res.status(404).send({ message: "Album not found" });
       }
-    }catch(err) {
-      res.status(500).send({ error: err });
-    }
-  }
-  else {
-    //Get all songs in album 
-    try {
+    } else {
       //Find album first
       const album = await Album.findById(req.params.albumId);
 
       if (album) {
         //Album found, now get all songs and return them in response
 
-        const tracks = await Track.find({albumId: req.params.albumId});
+        const tracks = await Track.find({ albumId: req.params.albumId });
 
-        res.status(200).send({result: tracks});
-      }
-      else {
+        res.status(200).send({ result: tracks });
+      } else {
         //Album not found
         res.status(404).send();
       }
-    }catch(err) {
-      res.status(500).send({ error: err });
     }
+  } catch (err) {
+    res.status(500).send({ error: err });
   }
-}
+};

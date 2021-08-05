@@ -8,7 +8,7 @@ const tracks = require("../controllers/track.controller");
 //Require authentication middleware
 const tokenCheck = require("../middleware/checkToken");
 
-router.post("/", tracks.addTrack);
+router.post("/:albumId/:categoryId", tracks.addTrack);
 router.get("/", tracks.getAllTracks);
 router.get("/:albumId", tokenCheck ,tracks.getSortedTracksByCategory); //Authenticated api
 router.post("/getTrackBySinger", tracks.getTrackBySinger);

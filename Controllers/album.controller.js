@@ -4,22 +4,17 @@ const Track = require("../Models/track");
 
 //Add album API
 exports.addAlbum = async (req, res) => {
-  //Extract values from request's body
-  const { name } = req.body;
-  const { description } = req.body;
-  const { showNumbOfTracks } = req.body;
-
   //Invalid input case
-  if (name === undefined) {
+  if (!req.body.name) {
     res
       .status(400)
       .send({ message: "Please make sure to give a name to the album!" });
   } else {
     //Create object from model with given values
     const album = new Album({
-      name: name,
-      description: description,
-      showNbOfTracks: showNumbOfTracks,
+      name: req.body.name,
+      description: req.body.description,
+      showNbOfTracks: req.body.showNumbOfTracks,
       createdDate: new Date(),
     });
 
@@ -39,11 +34,8 @@ exports.getAlbums = async (req, res) => {
   try {
     const result = await Album.find();
 
-    if (result.length > 0) {
-      res.status(200).send({ albums: result });
-    } else {
-      res.status(404).send();
-    }
+    res.status(200).send({result: result});
+
   } catch (err) {
     res.status(500).send({ error: err });
   }
@@ -78,12 +70,12 @@ exports.updateAlbumById = async (req, res) => {
     if (album) {
       try {
         //Album found, now we need to update it
-        const update = await Album.updateOne(
+        await Album.updateOne(
           { _id: id },
           {
             $set: {
-              name: req.body.newName,
-              description: req.body.newDescription,
+              name: req.body.name,
+              description: req.body.description,
               showNbOfTracks: req.body.showNumberOfTracks,
               updatedDate: new Date(),
             },
@@ -91,11 +83,7 @@ exports.updateAlbumById = async (req, res) => {
           { omitUndefined: true } //Make sure that only defined values are updated in the DB
         );
         //Check if update was successful
-        if (update.nModified > 0) {
-          res.end();
-        } else {
-          res.status(400).send(); // No update done
-        }
+        res.end();
       } catch (err) {
         res.status(500).send({ error: err }); //Error occurred in update
       }
@@ -126,11 +114,7 @@ exports.deleteAlbumById = async (req, res) => {
         //No tracks found, now delete album
         const deleteAlbum = await Album.deleteOne({ _id: id });
 
-        if (deleteAlbum.deletedCount > 0) {
-          res.end();
-        } else {
-          res.status(500).send();
-        }
+        res.end();
       }
     } else {
       //No album found
