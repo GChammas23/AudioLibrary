@@ -1,6 +1,6 @@
 //Require Category & Track models
-const Category = require("../model/category");
-const Track = require("../model/track");
+const Category = require("./category");
+const Track = require("../tracks/track");
 
 //ADD CATEGORY API
 exports.addCategory = async (req, res) => {

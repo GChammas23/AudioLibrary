@@ -1,7 +1,7 @@
 //Require track & album & category models to use
-const Track = require("../model/track");
-const Album = require("../model/album");
-const Category = require("../model/category");
+const Track = require("./track");
+const Album = require("../albums/album");
+const Category = require("../categories/category");
 
 //ADD TRACK API
 exports.addTrack = async (req, res) => {

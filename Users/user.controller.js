@@ -1,5 +1,5 @@
 //Require user Schema and other needed packages
-const User = require("../model/user");
+const User = require("./user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
