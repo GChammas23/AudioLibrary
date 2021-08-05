@@ -15,16 +15,16 @@ app.use(cors());
 
 //Require and use routes needed
 const categoryRoute = require("./routes/category.routes");
-app.use("/api", categoryRoute);
+app.use("/api/category", categoryRoute);
 
 const albumRoutes = require("./routes/album.routes");
-app.use("/api", albumRoutes);
+app.use("/api/album", albumRoutes);
 
 const trackRoutes = require("./routes/track.routes");
-app.use("/api", trackRoutes);
+app.use("/api/track", trackRoutes);
 
 const userRoutes = require("./routes/user.routes");
-app.use("/api", userRoutes);
+app.use("/api/auth", userRoutes);
 
 //CREATE SERVER
 const PORT = 3001;
