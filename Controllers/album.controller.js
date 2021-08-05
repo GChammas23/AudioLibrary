@@ -1,6 +1,6 @@
 //Require album & track models to use in functions
-const Album = require("./album");
-const Track = require("../Tracks/track");
+const Album = require("../Models/album");
+const Track = require("../Models/track");
 
 //Add album API
 exports.addAlbum = async (req, res) => {
