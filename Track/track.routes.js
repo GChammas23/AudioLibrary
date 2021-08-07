@@ -11,7 +11,7 @@ const tokenCheck = require("../middleware/checkToken");
 router.post("/:albumId/:categoryId", tracks.addTrack);
 router.get("/", tracks.getAllTracks);
 router.get("/:albumId", tokenCheck ,tracks.getSortedTracksByCategory); //Authenticated api
-router.post("/getTrackBySinger", tracks.getTrackBySinger);
+router.get("/getTrackBySinger/:singer", tracks.getTrackBySinger);
 router.delete("/:id", tracks.deleteTrackById);
 router.put("/:id", tracks.updateTrackById);
 
