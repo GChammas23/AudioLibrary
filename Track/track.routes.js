@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 //Require track services to access methods
-const tracks = require("../controllers/track.controller");
+const tracks = require("./track.controller");
 
 //Require authentication middleware
 const tokenCheck = require("../middleware/checkToken");

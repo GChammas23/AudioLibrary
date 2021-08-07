@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 //Require category services to access methods
-const categories = require("../controllers/category.controller");
+const categories = require("./category.controller");
 
 router.post('/', categories.addCategory);
 router.get('/', categories.getCategories);

@@ -14,16 +14,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 //Require and use routes needed
-const categoryRoute = require("./routes/category.routes");
+const categoryRoute = require("./Category/category.routes");
 app.use("/api/category", categoryRoute);
 
-const albumRoutes = require("./routes/album.routes");
+const albumRoutes = require("./Album/album.routes");
 app.use("/api/album", albumRoutes);
 
-const trackRoutes = require("./routes/track.routes");
+const trackRoutes = require("./Track/track.routes");
 app.use("/api/track", trackRoutes);
 
-const userRoutes = require("./routes/user.routes");
+const userRoutes = require("./User/user.routes");
 app.use("/api/auth", userRoutes);
 
 //CREATE SERVER
