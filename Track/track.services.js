@@ -1,4 +1,6 @@
 const Track = require("../Models/track");
+const Album = require("../Models/album");
+const Category = require("../Models/category");
 
 exports.addTrackService = async (req, res) => {
   //Create track object to save
