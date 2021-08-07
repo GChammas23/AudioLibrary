@@ -1,6 +1,5 @@
 //Require user Schema and other needed packages
 const User = require("../Models/user");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 //Require nodemailer and nodemailer sendgrid transport to send email to users
@@ -25,41 +24,34 @@ exports.createUser = async (req, res) => {
     try {
       const check = await User.findOne({ email: req.body.email });
 
+      //Password will be already hashed in frontend 
       if (!check) {
         //New email, create the user and save it
 
-        //Hash password first
-        const hashedPassword = await bcrypt.hash(req.body.password, 12);
+        //Create user and save it with given password
+        const newUser = new User({
+          name: req.body.name,
+          email: req.body.email,
+          password: req.body.password,
+          registrationDate: new Date(),
+        });
 
-        if (hashedPassword) {
-          //Create user and save it with hashed password
-          const newUser = new User({
-            name: req.body.name,
-            email: req.body.email,
-            password: hashedPassword,
-            registrationDate: new Date(),
-          });
+        const result = await newUser.save();
 
-          const result = await newUser.save();
+        // Send email to newly created user using sendGrid and nodeMailer
+        const sendMail = await transporter.sendMail({
+          to: req.body.email,
+          from: "audioLibrary2380@gmail.com",
+          subject: "Sign up successful!",
+          text: `Welcome to AudioLibrary ${req.body.name}!`,
+        });
 
-          // Send email to newly created user using sendGrid and nodeMailer
-          const sendMail = await transporter.sendMail({
-            to: req.body.email,
-            from: "audioLibrary2380@gmail.com",
-            subject: "Sign up successful!",
-            text: `Welcome to AudioLibrary ${req.body.name}!`,
-          });
-
-          if (sendMail) {
-            res.status(200).send({ result: result });
-          }
-          else {
-            res.status(500).send();
-          }
+        if (sendMail) {
+          res.status(200).send({ result: result });
         } else {
-          //Password not hashed
           res.status(500).send();
         }
+
       } else {
         //Email already exists
         res.status(400).send();
@@ -76,10 +68,8 @@ exports.login = async (req, res) => {
     const result = await User.findOne({ email: req.body.email });
 
     if (result) {
-      //Now check password using bcrypt
-      const isMatch = await bcrypt.compare(req.body.password, result.password);
 
-      if (isMatch) {
+      if (req.body.password == result.password) {
         //Correct credentials
 
         //Create JWT token
