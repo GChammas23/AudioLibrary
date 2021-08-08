@@ -59,7 +59,7 @@ exports.deleteCategoryService = async (req) => {
 
     if (tracks) {
       //One track found, can't delete
-      return 403;
+      return 409;
     } else {
       //No tracks found, now delete category
       await Category.deleteOne({ _id: req.params.id });
