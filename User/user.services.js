@@ -2,6 +2,9 @@
 const User = require("../Models/user");
 const jwt = require("jsonwebtoken");
 
+//Require config file
+const config = require('../config');
+
 //Require nodemailer and nodemailer sendgrid transport to send email to users
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
@@ -10,7 +13,7 @@ const sendgridTransport = require("nodemailer-sendgrid-transport");
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
-      api_key: process.env.SEND_GRID_API_KEY,
+      api_key: config.apiKeys.sendGrid,
     },
   })
 );
@@ -64,7 +67,7 @@ exports.loginService = async (req) => {
           email: req.body.email,
           id: result._id.toString(),
         },
-        process.env.JWT_SECRET,
+        config.jwt.secret,
         { expiresIn: "1h" }
       );
 

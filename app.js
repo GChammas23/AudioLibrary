@@ -6,6 +6,9 @@ const app = express();
 //Setup dotenv
 require("dotenv").config();
 
+//Require config file
+const config = require('./config');
+
 //SETUP MIDDLEWARE
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,7 +34,7 @@ const PORT = 3001;
 //ADD LISTENER TO PORT
 mongoose
   .connect(
-    process.env.DB_URL,
+    config.mongo.url,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
