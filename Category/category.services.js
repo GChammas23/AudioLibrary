@@ -55,10 +55,10 @@ exports.deleteCategoryService = async (req) => {
 
   if (category) {
     //Check if category has any tracks related to it
-    const tracks = await Track.find({ categoryId: req.params.id });
+    const tracks = await Track.findOne({ categoryId: req.params.id });
 
-    if (tracks.length > 0) {
-      //Tracks found, can't delete
+    if (tracks) {
+      //One track found, can't delete
       return 403;
     } else {
       //No tracks found, now delete category

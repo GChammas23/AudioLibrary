@@ -60,11 +60,11 @@ exports.deleteAlbumByIdService = async (req) => {
 
   if (album) {
     //Check if album has any tracks
-    const tracks = await Track.find({ albumId: req.params.id });
+    const track = await Track.findOne({ albumId: req.params.id });
 
-    if (tracks.length > 0) {
-      //Tracks found cannot delete
-      return false;
+    if (track) {
+      //One track found cannot delete
+      return 403;
     } else {
       //No tracks found, now delete album
       await Album.deleteOne({ _id: req.params.id });
