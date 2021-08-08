@@ -55,10 +55,10 @@ exports.updateAlbumById = async (req, res) => {
   try {
     const result = await services.updateAlbumByIdService(req, res);
 
-    if (result) {
+    if (result == 200) {
       res.end();
     } else {
-      res.status(404).send();
+      res.status(result).send();
     }
   } catch (err) {
     throw new Error(err.message); //Error occurred in find
@@ -69,10 +69,10 @@ exports.deleteAlbumById = async (req, res) => {
   try {
     const result = await services.deleteAlbumByIdService(req, res);
 
-    if (result) {
+    if (result == 200) {
       res.end();
     } else {
-      res.status(404).send();
+      res.status(result).send();
     }
   } catch (err) {
     throw new Error(err.message);

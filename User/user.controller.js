@@ -8,7 +8,7 @@ exports.createUser = async (req, res) => {
   } else {
     //Check if email is already in use first
     try {
-      const result = await services.signUpService(req, res);
+      const result = await services.signUpService(req);
 
       if (result) {
         res.status(200).send({ result: result });
@@ -24,7 +24,7 @@ exports.createUser = async (req, res) => {
 exports.login = async (req, res) => {
   //Check if entered email is existing
   try {
-    const result = await services.loginService(req, res);
+    const result = await services.loginService(req);
 
     if(result) {
       res.status(200).send({result: result})

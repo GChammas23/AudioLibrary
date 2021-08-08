@@ -1,7 +1,8 @@
 //Require needed modules and models
 const Album = require("../Models/album");
+const Track = require('../Models/track');
 
-exports.addAlbumService = async (req, res) => {
+exports.addAlbumService = async (req) => {
   //Create object from model with given values
   const album = new Album({
     name: req.body.name,
@@ -15,13 +16,13 @@ exports.addAlbumService = async (req, res) => {
   return result._id;
 };
 
-exports.getAlbumsService = async (req, res) => {
+exports.getAlbumsService = async () => {
   const result = await Album.find();
 
   return result;
 };
 
-exports.getAlbumByIdService = async (req, res) => {
+exports.getAlbumByIdService = async (req) => {
   const album = await Album.findById(req.params.id);
 
   if (album) {
@@ -31,7 +32,7 @@ exports.getAlbumByIdService = async (req, res) => {
   }
 };
 
-exports.updateAlbumByIdService = async (req, res) => {
+exports.updateAlbumByIdService = async (req) => {
   const album = await Album.findById({ _id: req.params.id });
   if (album) {
     //Album found, now we need to update it
@@ -47,14 +48,13 @@ exports.updateAlbumByIdService = async (req, res) => {
       },
       { omitUndefined: true } //Make sure that only defined values are updated in the DB
     );
-    //Check if update was successful
-    return true;
+    return 200;
   } else {
-    return false; // Album not found
+    return 404; // Album not found
   }
 };
 
-exports.deleteAlbumByIdService = async (req, res) => {
+exports.deleteAlbumByIdService = async (req) => {
   //Find album first
   const album = await Album.findById(req.params.id);
 
@@ -69,15 +69,15 @@ exports.deleteAlbumByIdService = async (req, res) => {
       //No tracks found, now delete album
       await Album.deleteOne({ _id: req.params.id });
 
-      return true;
+      return 200;
     }
   } else {
     //No album found
-    return false;
+    return 404;
   }
 };
 
-exports.getNbOfTracksService = async (req, res) => {
+exports.getNbOfTracksService = async () => {
   //Create an array to store results in
   var results = [];
 

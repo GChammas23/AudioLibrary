@@ -4,7 +4,7 @@ const services = require("./track.services");
 //ADD TRACK API
 exports.addTrack = async (req, res) => {
   try {
-    const result = await services.addTrackService(req, res);
+    const result = await services.addTrackService(req);
     res.status(200).send({ result: result });
   } catch (err) {
     throw new Error(err.message);
@@ -14,7 +14,7 @@ exports.addTrack = async (req, res) => {
 //GET ALL TRACKS API
 exports.getAllTracks = async (req, res) => {
   try {
-    const result = await services.getTracksService(req, res);
+    const result = await services.getTracksService();
     res.status(200).send({ result: result });
   } catch (err) {
     throw new Error(err.message);
@@ -24,7 +24,7 @@ exports.getAllTracks = async (req, res) => {
 //GET TRACK BY SINGER API
 exports.getTrackBySinger = async (req, res) => {
   try {
-    const result = await services.getTrackBySingerService(req, res);
+    const result = await services.getTrackBySingerService(req);
     res.status(200).send({ result: result });
   } catch (err) {
     throw new Error(err.message);
@@ -34,11 +34,11 @@ exports.getTrackBySinger = async (req, res) => {
 //UPDATE TRACK API
 exports.updateTrackById = async (req, res) => {
   try {
-    const result = await services.updateTrackByIdService(req, res);
-    if (result) {
+    const result = await services.updateTrackByIdService(req);
+    if (result == 200) {
       res.end();
     } else {
-      res.status(404).send();
+      res.status(result).send();
     }
   } catch (err) {
     throw new Error(err.message);
@@ -48,12 +48,12 @@ exports.updateTrackById = async (req, res) => {
 //DELETE TRACK API
 exports.deleteTrackById = async (req, res) => {
   try {
-    const result = await services.deleteTrackByIdService(req, res);
+    const result = await services.deleteTrackByIdService(req);
 
-    if (result) {
+    if (result == 200) {
       res.end();
     } else {
-      res.status(404).send();
+      res.status(result).send();
     }
   } catch (err) {
     throw new Error(err.message);
@@ -62,7 +62,7 @@ exports.deleteTrackById = async (req, res) => {
 
 exports.getSortedTracksByCategory = async (req, res) => {
   try {
-    const result = await services.getSortedTrackService(req, res);
+    const result = await services.getSortedTrackService(req);
 
     if (result) {
       res.status(200).send({ result: result });
