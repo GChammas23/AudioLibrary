@@ -4,7 +4,7 @@ const services = require("./track.services");
 //ADD TRACK API
 exports.addTrack = async (req, res) => {
   try {
-    const result = await services.addTrackService(req);
+    const result = await services.addTrack(req);
     res.status(200).send({ result: result });
   } catch (err) {
     throw new Error(err.message);
@@ -14,7 +14,7 @@ exports.addTrack = async (req, res) => {
 //GET ALL TRACKS API
 exports.getAllTracks = async (req, res) => {
   try {
-    const result = await services.getTracksService();
+    const result = await services.getAllTracks();
     res.status(200).send({ result: result });
   } catch (err) {
     throw new Error(err.message);
@@ -24,7 +24,7 @@ exports.getAllTracks = async (req, res) => {
 //GET TRACK BY SINGER API
 exports.getTrackBySinger = async (req, res) => {
   try {
-    const result = await services.getTrackBySingerService(req);
+    const result = await services.getTrackBySinger(req);
     res.status(200).send({ result: result });
   } catch (err) {
     throw new Error(err.message);
@@ -34,7 +34,7 @@ exports.getTrackBySinger = async (req, res) => {
 //UPDATE TRACK API
 exports.updateTrackById = async (req, res) => {
   try {
-    const result = await services.updateTrackByIdService(req);
+    const result = await services.updateTrackById(req);
     if (result == 200) {
       res.end();
     } else {
@@ -48,7 +48,7 @@ exports.updateTrackById = async (req, res) => {
 //DELETE TRACK API
 exports.deleteTrackById = async (req, res) => {
   try {
-    const result = await services.deleteTrackByIdService(req);
+    const result = await services.deleteTrackById(req);
 
     if (result == 200) {
       res.end();
@@ -62,7 +62,7 @@ exports.deleteTrackById = async (req, res) => {
 
 exports.getSortedTracksByCategory = async (req, res) => {
   try {
-    const result = await services.getSortedTrackService(req);
+    const result = await services.getSortedTrackByCategory(req);
 
     if (result) {
       res.status(200).send({ result: result });

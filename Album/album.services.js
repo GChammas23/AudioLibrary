@@ -2,7 +2,7 @@
 const Album = require("../Models/album");
 const Track = require('../Models/track');
 
-exports.addAlbumService = async (req) => {
+exports.addAlbum = async (req) => {
   //Create object from model with given values
   const album = new Album({
     name: req.body.name,
@@ -16,13 +16,13 @@ exports.addAlbumService = async (req) => {
   return result._id;
 };
 
-exports.getAlbumsService = async () => {
+exports.getAlbums = async () => {
   const result = await Album.find();
 
   return result;
 };
 
-exports.getAlbumByIdService = async (req) => {
+exports.getAlbumById = async (req) => {
   const album = await Album.findById(req.params.id);
 
   if (album) {
@@ -32,7 +32,7 @@ exports.getAlbumByIdService = async (req) => {
   }
 };
 
-exports.updateAlbumByIdService = async (req) => {
+exports.updateAlbumById = async (req) => {
   const album = await Album.findById({ _id: req.params.id });
   if (album) {
     //Album found, now we need to update it
@@ -54,7 +54,7 @@ exports.updateAlbumByIdService = async (req) => {
   }
 };
 
-exports.deleteAlbumByIdService = async (req) => {
+exports.deleteAlbumById = async (req) => {
   //Find album first
   const album = await Album.findById(req.params.id);
 
@@ -77,7 +77,7 @@ exports.deleteAlbumByIdService = async (req) => {
   }
 };
 
-exports.getNbOfTracksService = async () => {
+exports.getNbOfTracks = async () => {
   //Create an array to store results in
   var results = [];
 

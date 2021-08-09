@@ -1,13 +1,10 @@
-//Require Category & Track models
-const Category = require("../Models/category");
-const Track = require("../Models/track");
-
+//Require services functions
 const services = require("./category.services");
 
 //ADD CATEGORY API
 exports.addCategory = async (req, res) => {
   try {
-    const result = await services.addCategoryService(req);
+    const result = await services.addCategory(req);
 
     if (result) {
       res.status(200).send({ result: result });
@@ -22,7 +19,7 @@ exports.addCategory = async (req, res) => {
 //GET ALL CATEGORIES
 exports.getCategories = async (req, res) => {
   try {
-    const result = await services.getCategoriesService();
+    const result = await services.getCategories();
     res.status(200).send({ result: result });
   } catch (err) {
     throw new Error(err.message);
@@ -32,7 +29,7 @@ exports.getCategories = async (req, res) => {
 //GET CATEGORY BY ID
 exports.getCategoryById = async (req, res) => {
   try {
-    const result = await services.getCategoryByIdService(req);
+    const result = await services.getCategoryById(req);
 
     if (result) {
       res.status(200).send({ result: result });
@@ -48,7 +45,7 @@ exports.getCategoryById = async (req, res) => {
 exports.updateCategoryById = async (req, res) => {
   //Find category first
   try {
-    const result = await services.updateCategoryService(req);
+    const result = await services.updateCategoryById(req);
 
     if (result == 200) {
       res.end();
@@ -63,7 +60,7 @@ exports.updateCategoryById = async (req, res) => {
 //DELETE CATEGORY
 exports.deleteCategoryById = async (req, res) => {
   try {
-    const result = await services.deleteCategoryService(req);
+    const result = await services.deleteCategoryById(req);
 
     if (result == 200) {
       res.end();

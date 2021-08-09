@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport(
   })
 );
 
-exports.signUpService = async (req) => {
+exports.createUser = async (req) => {
   const check = await User.findOne({ email: req.body.email });
 
   //Password will be already hashed in frontend
@@ -54,7 +54,7 @@ exports.signUpService = async (req) => {
   }
 };
 
-exports.loginService = async (req) => {
+exports.login = async (req) => {
   const result = await User.findOne({ email: req.body.email });
 
   if (result) {

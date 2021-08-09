@@ -2,7 +2,7 @@ const Track = require("../Models/track");
 const Album = require("../Models/album");
 const Category = require("../Models/category");
 
-exports.addTrackService = async (req) => {
+exports.addTrack = async (req) => {
   //Create track object to save
   const track = new Track({
     name: req.body.name,
@@ -16,20 +16,20 @@ exports.addTrackService = async (req) => {
   return result._id;
 };
 
-exports.getTracksService = async () => {
+exports.getAllTracks = async () => {
   const result = await Track.find();
 
   return result;
 };
 
-exports.getTrackBySingerService = async (req) => {
+exports.getTrackBySinger = async (req) => {
   //Find the album with the specified singer
   const result = await Track.find({ singer: req.params.singer });
 
   return result;
 };
 
-exports.updateTrackByIdService = async (req) => {
+exports.updateTrackById = async (req) => {
   //Find the track by its id and update it with the new values
   const track = await Track.findById(req.params.id);
 
@@ -54,7 +54,7 @@ exports.updateTrackByIdService = async (req) => {
   }
 };
 
-exports.deleteTrackByIdService = async (req) => {
+exports.deleteTrackById = async (req) => {
   //Delete track by id and return response
 
   //First try to find the track
@@ -71,7 +71,7 @@ exports.deleteTrackByIdService = async (req) => {
   }
 };
 
-exports.getSortedTrackService = async (req) => {
+exports.getSortedTrackByCategory = async (req) => {
   //Get all songs in album with given category
   
   //Check if we have a category id sent in the request

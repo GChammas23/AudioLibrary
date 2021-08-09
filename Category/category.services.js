@@ -1,6 +1,6 @@
 const Category = require("../Models/category");
 
-exports.addCategoryService = async (req) => {
+exports.addCategory = async (req) => {
   //Create object from model with given values
   const category = new Category({
     name: req.body.name,
@@ -13,19 +13,19 @@ exports.addCategoryService = async (req) => {
   return result._id;
 };
 
-exports.getCategoriesService = async () => {
+exports.getCategories = async () => {
   const result = await Category.find();
 
   return result;
 };
 
-exports.getCategoryByIdService = async (req) => {
+exports.getCategoryById = async (req) => {
   const category = await Category.findById(req.params.id);
 
   return category;
 };
 
-exports.updateCategoryService = async (req) => {
+exports.updateCategoryById = async (req) => {
   const category = await Category.findById(req.params.id);
 
   if (category) {
@@ -49,7 +49,7 @@ exports.updateCategoryService = async (req) => {
   }
 };
 
-exports.deleteCategoryService = async (req) => {
+exports.deleteCategoryById = async (req) => {
   //Find category first
   const category = await Category.findById(req.params.id);
 

@@ -10,7 +10,7 @@ exports.addAlbum = async (req, res) => {
       .send({ message: "Please make sure to give a name to the album!" });
   } else {
     try {
-      const result = await services.addAlbumService(req, res);
+      const result = await services.addAlbum(req);
       if (result) {
         res.status(200).send({ result: result });
       } else {
@@ -26,7 +26,7 @@ exports.addAlbum = async (req, res) => {
 exports.getAlbums = async (req, res) => {
   //Get all albums from DB
   try {
-    const result = await services.getAlbumsService(req, res);
+    const result = await services.getAlbums();
 
     res.status(200).send({ result: result });
   } catch (err) {
@@ -37,7 +37,7 @@ exports.getAlbums = async (req, res) => {
 //Get specific album
 exports.getAlbumById = async (req, res) => {
   try {
-    const result = await services.getAlbumByIdService(req, res);
+    const result = await services.getAlbumById(req);
 
     if (result) {
       res.status(200).send({ result: result });
@@ -53,7 +53,7 @@ exports.getAlbumById = async (req, res) => {
 exports.updateAlbumById = async (req, res) => {
   //Find the album first
   try {
-    const result = await services.updateAlbumByIdService(req, res);
+    const result = await services.updateAlbumById(req);
 
     if (result == 200) {
       res.end();
@@ -67,7 +67,7 @@ exports.updateAlbumById = async (req, res) => {
 
 exports.deleteAlbumById = async (req, res) => {
   try {
-    const result = await services.deleteAlbumByIdService(req, res);
+    const result = await services.deleteAlbumById(req);
 
     if (result == 200) {
       res.end();
@@ -82,7 +82,7 @@ exports.deleteAlbumById = async (req, res) => {
 //GET NUMBER OF TRACKS FOR ALL ALBUMS
 exports.getNbOfTracks = async (req, res) => {
   try {
-    const result = await services.getNbOfTracksService(req, res);
+    const result = await services.getNbOfTracks();
 
     if (result) {
       res.status(200).send({ result: result });
