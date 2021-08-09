@@ -59,4 +59,5 @@ The following list shows the different technologies used to develop this project
 * Mongoose
 * Nodemailer ==> To send email to new users
 * SendGrid
-* jsonwebtoken ==> For authentication 
+* jsonwebtoken ==> For authentication
+* Express-validation & Joi ==> For validating requests 
