@@ -3,22 +3,12 @@ const services = require("./album.services");
 
 //Add album API
 exports.addAlbum = async (req, res) => {
-  //Invalid input case
-  if (!req.body.name) {
-    res
-      .status(400)
-      .send({ message: "Please make sure to give a name to the album!" });
-  } else {
-    try {
-      const result = await services.addAlbum(req);
-      if (result) {
-        res.status(200).send({ result: result });
-      } else {
-        res.status(400).send();
-      }
-    } catch (err) {
-      throw new Error(err.message);
-    }
+  try {
+    const result = await services.addAlbum(req);
+    
+    res.status(200).send({ result: result });
+  } catch (err) {
+    throw new Error(err.message);
   }
 };
 
