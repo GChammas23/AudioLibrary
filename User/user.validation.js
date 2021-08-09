@@ -4,9 +4,16 @@ exports.loginSchema = {
   body: Joi.object({
     email: Joi.string()
       .email({ tlds: { allow: ["com"] } })
-      .required(),
+      .required()
+      .messages({
+        "any.required": "Email not entered!",
+        "string.empty": "Email can't be empty!",
+      }),
 
-    password: Joi.string().required(),
+    password: Joi.string().required().messages({
+      "any.required": "Password not entered!",
+      "string.empty": "Password can't be empty!",
+    }),
   }),
 };
 
@@ -16,9 +23,16 @@ exports.signUpSchema = {
 
     email: Joi.string()
       .email({ tlds: { allow: ["com"] } })
-      .required(),
+      .required()
+      .messages({
+        "any.required": "Email not entered!",
+        "string.empty": "Name can't be empty!",
+      }),
 
-    password: Joi.string().required(),
+    password: Joi.string().required().messages({
+      "any.required": "Password not entered!",
+      "string.empty": "Password can't be empty!",
+    }),
 
     confirmPassword: Joi.ref("password"),
   })
