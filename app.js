@@ -2,7 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+const { Server } = require("socket.io");
 
+//Require the validation error from express-validation
 const { ValidationError } = require("express-validation");
 
 //Setup dotenv
@@ -46,6 +48,14 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+    const server = app.listen(PORT, () =>
+      console.log(`Listening on port ${PORT}`)
+    );
+
+    const io = new Server(server);
+
+    io.on('connection', (socket) => {
+      console.log(`Client with id: ${socket.id} connected`);
+    })
   })
   .catch((err) => console.log(err));
