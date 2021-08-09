@@ -13,7 +13,7 @@ exports.createUser = async (req, res) => {
       if (result) {
         res.status(200).send({ result: result });
       } else {
-        res.status(400).send();
+        res.status(409).send();
       }
     } catch (err) {
       throw new Error(err.message);
