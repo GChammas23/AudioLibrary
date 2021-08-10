@@ -2,17 +2,12 @@
 const Album = require("../Models/album");
 const Track = require('../Models/track');
 
-exports.addAlbum = async (req) => {
+exports.addAlbum = async (album) => {
   //Create object from model with given values
-  const album = new Album({
-    name: req.body.name,
-    description: req.body.description,
-    showNbOfTracks: req.body.showNumbOfTracks,
-    createdDate: new Date(),
-  });
+  const newAlbum = new Album(album);
 
   //Save object to DB
-  const result = await album.save();
+  const result = await newAlbum.save();
   return result._id;
 };
 
@@ -22,8 +17,8 @@ exports.getAlbums = async () => {
   return result;
 };
 
-exports.getAlbumById = async (req) => {
-  const album = await Album.findById(req.params.id);
+exports.getAlbumById = async (id) => {
+  const album = await Album.findById(id);
 
   if (album) {
     return album; //Album found, send it in response
@@ -32,19 +27,14 @@ exports.getAlbumById = async (req) => {
   }
 };
 
-exports.updateAlbumById = async (req) => {
-  const album = await Album.findById({ _id: req.params.id });
+exports.updateAlbumById = async (values, id) => {
+  const album = await Album.findById({ _id: id });
   if (album) {
     //Album found, now we need to update it
     await Album.updateOne(
-      { _id: req.params.id },
+      { _id: id },
       {
-        $set: {
-          name: req.body.name,
-          description: req.body.description,
-          showNbOfTracks: req.body.showNumberOfTracks,
-          updatedDate: new Date(),
-        },
+        $set: values,
       },
       { omitUndefined: true } //Make sure that only defined values are updated in the DB
     );
@@ -54,20 +44,20 @@ exports.updateAlbumById = async (req) => {
   }
 };
 
-exports.deleteAlbumById = async (req) => {
+exports.deleteAlbumById = async (id) => {
   //Find album first
-  const album = await Album.findById(req.params.id);
+  const album = await Album.findById(id);
 
   if (album) {
     //Check if album has any tracks
-    const track = await Track.findOne({ albumId: req.params.id });
+    const track = await Track.findOne({ albumId: id });
 
     if (track) {
       //One track found cannot delete
       return 409;
     } else {
       //No tracks found, now delete album
-      await Album.deleteOne({ _id: req.params.id });
+      await Album.deleteOne({ _id: id });
 
       return 200;
     }

@@ -3,8 +3,15 @@ const services = require("./category.services");
 
 //ADD CATEGORY API
 exports.addCategory = async (req, res) => {
+  //Create category object to send to service function
+  const category = {
+    name: req.body.name,
+    description: req.body.description,
+    createdDate: new Date(),
+  };
+
   try {
-    const result = await services.addCategory(req);
+    const result = await services.addCategory(category);
 
     if (result) {
       res.status(200).send({ result: result });
@@ -20,6 +27,7 @@ exports.addCategory = async (req, res) => {
 exports.getCategories = async (req, res) => {
   try {
     const result = await services.getCategories();
+
     res.status(200).send({ result: result });
   } catch (err) {
     throw new Error(err.message);
@@ -29,7 +37,7 @@ exports.getCategories = async (req, res) => {
 //GET CATEGORY BY ID
 exports.getCategoryById = async (req, res) => {
   try {
-    const result = await services.getCategoryById(req);
+    const result = await services.getCategoryById(req.params.id);
 
     if (result) {
       res.status(200).send({ result: result });
@@ -43,15 +51,22 @@ exports.getCategoryById = async (req, res) => {
 
 //UPDATE CATEGORY
 exports.updateCategoryById = async (req, res) => {
-  //Find category first
+  //Create updatedValues object
+  const updatedValues = {
+    name: req.body.name,
+    description: req.body.description,
+    updatedDate: new Date(),
+  };
+
   try {
-    const result = await services.updateCategoryById(req);
+    const result = await services.updateCategoryById(updatedValues, req.params.id);
 
     if (result == 200) {
       res.end();
     } else {
       res.status(result).send();
     }
+
   } catch (err) {
     throw new Error(err.message); //Error while finding the category
   }
@@ -60,13 +75,14 @@ exports.updateCategoryById = async (req, res) => {
 //DELETE CATEGORY
 exports.deleteCategoryById = async (req, res) => {
   try {
-    const result = await services.deleteCategoryById(req);
+    const result = await services.deleteCategoryById(req.params.id);
 
     if (result == 200) {
       res.end();
     } else {
       res.status(result).send();
     }
+
   } catch (err) {
     throw new Error(err.message);
   }

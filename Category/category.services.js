@@ -1,15 +1,12 @@
 const Category = require("../Models/category");
+const Track = require("../Models/track");
 
-exports.addCategory = async (req) => {
+exports.addCategory = async (category) => {
   //Create object from model with given values
-  const category = new Category({
-    name: req.body.name,
-    description: req.body.description,
-    createdDate: new Date(),
-  });
+  const newCategory = new Category(category);
 
   //Save category to DB
-  const result = await category.save();
+  const result = await newCategory.save();
   return result._id;
 };
 
@@ -19,25 +16,21 @@ exports.getCategories = async () => {
   return result;
 };
 
-exports.getCategoryById = async (req) => {
-  const category = await Category.findById(req.params.id);
+exports.getCategoryById = async (id) => {
+  const category = await Category.findById(id);
 
   return category;
 };
 
-exports.updateCategoryById = async (req) => {
-  const category = await Category.findById(req.params.id);
+exports.updateCategoryById = async (values, id) => {
+  const category = await Category.findById(id);
 
   if (category) {
     //Category found, now update it
     await Category.updateOne(
-      { _id: req.params.id },
+      { _id: id },
       {
-        $set: {
-          name: req.body.newName,
-          description: req.body.newDescription,
-          updatedDate: new Date(),
-        },
+        $set: values,
       },
       { omitUndefined: true } //Accept only defined values
     );
@@ -49,20 +42,20 @@ exports.updateCategoryById = async (req) => {
   }
 };
 
-exports.deleteCategoryById = async (req) => {
+exports.deleteCategoryById = async (id) => {
   //Find category first
-  const category = await Category.findById(req.params.id);
+  const category = await Category.findById(id);
 
   if (category) {
     //Check if category has any tracks related to it
-    const tracks = await Track.findOne({ categoryId: req.params.id });
+    const tracks = await Track.findOne({ categoryId: id });
 
     if (tracks) {
       //One track found, can't delete
       return 409;
     } else {
       //No tracks found, now delete category
-      await Category.deleteOne({ _id: req.params.id });
+      await Category.deleteOne({ _id: id });
 
       return 200;
     }
