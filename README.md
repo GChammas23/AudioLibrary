@@ -7,6 +7,47 @@
 
 This project contains multiple back-end microservices that allow for complete manipulation of records related to albums, tracks and categories which will be more discussed in the later parts.
 
+## Project structure
+```
+├── Album (All files related to album model)
+│   ├── album.controller.js
+│   ├── album.routes.js
+│   ├── album.services.js
+│   └── album.validation.js
+|
+├── Category (All files related to Category model)
+│   ├── category.controller.js
+│   ├── category.routes.js
+│   ├── category.services.js
+│   └── category.validation.js
+|
+├── Models (All mongoose model files are here)
+│   ├── album.js
+│   ├── category.js
+│   ├── track.js
+│   └── user.js
+|
+├── Track (All files related to Track model)
+│   ├── track.controller.js
+│   ├── track.routes.js
+│   ├── track.services.js
+│   └── track.validation.js
+|
+├── User (All files related to User model)
+│   ├── user.controller.js
+│   ├── user.routes.js
+│   ├── user.services.js
+│   └── user.validation.js
+|
+├── app.js (Start point of server)
+├── config.js
+├── middleware (Contains needed middleware functions)
+│   └── checkToken.js
+|
+├── package-lock.json
+├── package.json
+```
+
 ## Models
 ### Album
 This model represents an album that may contain one or more track. The following is a list of services available for this model:
