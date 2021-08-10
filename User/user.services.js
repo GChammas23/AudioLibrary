@@ -3,7 +3,7 @@ const User = require("../Models/user");
 const jwt = require("jsonwebtoken");
 
 //Require config file
-const config = require('../config');
+const config = require("../config");
 
 //Require nodemailer and nodemailer sendgrid transport to send email to users
 const nodemailer = require("nodemailer");
@@ -18,29 +18,25 @@ const transporter = nodemailer.createTransport(
   })
 );
 
-exports.createUser = async (req) => {
-  const check = await User.findOne({ email: req.body.email });
+exports.createUser = async (user) => {
+  //First check email availability
+  const check = await User.findOne({ email: user.email });
 
   //Password will be already hashed in frontend
   if (!check) {
     //New email, create the user and save it
 
     //Create user and save it with given password
-    const newUser = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      registrationDate: new Date(),
-    });
+    const newUser = new User(user);
 
     const result = await newUser.save();
 
     // Send email to newly created user using sendGrid and nodeMailer
     const sendMail = await transporter.sendMail({
-      to: req.body.email,
+      to: user.email,
       from: "audioLibrary2380@gmail.com",
       subject: "Sign up successful!",
-      text: `Welcome to AudioLibrary ${req.body.name}!`,
+      text: `Welcome to AudioLibrary ${user.name}!`,
     });
 
     if (sendMail) {
@@ -54,17 +50,17 @@ exports.createUser = async (req) => {
   }
 };
 
-exports.login = async (req) => {
-  const result = await User.findOne({ email: req.body.email });
+exports.login = async (credentials) => {
+  const result = await User.findOne({ email: credentials.email });
 
   if (result) {
-    if (req.body.password == result.password) {
+    if (credentials.password == result.password) {
       //Correct credentials
 
       //Create JWT token
       const token = jwt.sign(
         {
-          email: req.body.email,
+          email: credentials.email,
           id: result._id.toString(),
         },
         config.jwt.secret,
