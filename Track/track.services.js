@@ -2,17 +2,12 @@ const Track = require("../Models/track");
 const Album = require("../Models/album");
 const Category = require("../Models/category");
 
-exports.addTrack = async (req) => {
+exports.addTrack = async (track) => {
   //Create track object to save
-  const track = new Track({
-    name: req.body.name,
-    singer: req.body.singer,
-    categoryId: req.params.categoryId,
-    albumId: req.params.albumId,
-  });
+  const newTrack = new Track(track);
 
   //Save the created object in DB
-  const result = await track.save();
+  const result = await newTrack.save();
   return result._id;
 };
 
@@ -22,28 +17,23 @@ exports.getAllTracks = async () => {
   return result;
 };
 
-exports.getTrackBySinger = async (req) => {
+exports.getTrackBySinger = async (singer) => {
   //Find the album with the specified singer
-  const result = await Track.find({ singer: req.params.singer });
+  const result = await Track.find({ singer: singer });
 
   return result;
 };
 
-exports.updateTrackById = async (req) => {
+exports.updateTrackById = async (values, id) => {
   //Find the track by its id and update it with the new values
-  const track = await Track.findById(req.params.id);
+  const track = await Track.findById(id);
 
   if (track) {
     //Track found, now update it
     await Track.updateOne(
-      { _id: req.params.id },
+      { _id: id },
       {
-        $set: {
-          name: req.body.name,
-          singer: req.body.singer,
-          categoryId: req.body.categoryId,
-          albumId: req.body.albumId,
-        },
+        $set: values,
       },
       { omitUndefined: true }
     );
@@ -54,15 +44,15 @@ exports.updateTrackById = async (req) => {
   }
 };
 
-exports.deleteTrackById = async (req) => {
+exports.deleteTrackById = async (id) => {
   //Delete track by id and return response
 
   //First try to find the track
-  const track = await Track.findById(req.params.id);
+  const track = await Track.findById(id);
 
   if (track) {
     //Track found, now delete it
-    await Track.deleteOne({ _id: req.params.id });
+    await Track.deleteOne({ _id: id });
 
     return 200; //Deleted track
   } else {
@@ -71,44 +61,47 @@ exports.deleteTrackById = async (req) => {
   }
 };
 
-exports.getSortedTrackByCategory = async (req) => {
+exports.getSortedTrackByCategory = async (parameters) => {
   //Get all songs in album with given category
-  
+
   //Check if we have a category id sent in the request
-  if (Object.keys(req.query).length > 0) {
-    //Check for album first
-    const album = await Album.findById(req.params.albumId);
+  if (parameters.categoryId) {
+    //We have a category
+
+    //Find album first
+    const album = await Album.findById(parameters.albumId);
 
     if (album) {
-      //Album found, now check category
-      const category = await Category.findById(
-        req.query[Object.keys(req.query)[0]]
-      );
+      //Album found, now get category
+      const category = await Category.findById(parameters.categoryId);
 
       if (category) {
-        //Category found, now find tracks
+        //Finally, get tracks related to album and category
         const tracks = await Track.find({
-          albumId: req.params.albumId,
-          categoryId: req.query[Object.keys(req.query)[0]],
+          albumId: parameters.albumId,
+          categoryId: parameters.categoryId,
         });
 
         return tracks;
-      } else {
+      }
+      else {
         //Category not found
         return;
       }
-    } else {
+    }
+    else {
       //Album not found
       return;
     }
   } else {
+    //No category found, only albumId is provided
+
     //Find album first
-    const album = await Album.findById(req.params.albumId);
+    const album = await Album.findById(parameters.albumId);
 
     if (album) {
-      //Album found, now get all songs and return them in response
-
-      const tracks = await Track.find({ albumId: req.params.albumId });
+      //Album found, now get all related tracks
+      const tracks = await Track.find({ albumId: parameters.albumId });
 
       return tracks;
     } else {
