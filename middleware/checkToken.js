@@ -3,6 +3,10 @@ const jwt = require("jsonwebtoken");
 
 //Middleware method to check authentication of user
 module.exports = (req, res, next) => {
+  //Check if we have auth header first
+  if (!req.headers.authorization){
+    res.status(403).send({message: "No authorization token sent! Make sure to login first"});
+  }
   //Get Authorization header from request and split to get the token
   const receivedToken = req.get("Authorization").split(" ")[1];
 

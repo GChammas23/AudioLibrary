@@ -39,7 +39,7 @@ app.use(function (err, req, res, next) {
 });
 
 //CREATE SERVER
-const PORT = 3001;
+const PORT = config.server.port;
 
 //ADD LISTENER TO PORT
 mongoose
