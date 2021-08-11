@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const albumSchema = new Schema({
   name: {
     type: String,
-    required: true,
   },
 
   description: {

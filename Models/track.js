@@ -5,24 +5,20 @@ const Schema = mongoose.Schema;
 const trackSchema = new Schema({
   name: {
     type: String,
-    required: true,
   },
 
   singer: {
     type: String,
-    required: true,
   },
 
   categoryId: {
     type: Schema.Types.ObjectId,
     ref: "Category",
-    required: true,
   },
 
   albumId: {
     type: Schema.Types.ObjectId,
     ref: "Album",
-    required: true,
   },
 
   __v: {
@@ -31,5 +27,7 @@ const trackSchema = new Schema({
   }
   
 });
+
+trackSchema.index({singer: 1});
 
 module.exports = mongoose.model("Track", trackSchema);

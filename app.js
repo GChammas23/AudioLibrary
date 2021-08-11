@@ -46,6 +46,7 @@ mongoose
   .connect(config.mongo.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => {
     const server = app.listen(PORT, () =>
