@@ -11,7 +11,9 @@ const { ValidationError } = require("express-validation");
 require("dotenv").config();
 
 //Require config file
-const config = require("./config");
+const config = require("./configs/config");
+
+const sender = require('./middleware/responseSender');
 
 //SETUP MIDDLEWARE
 app.use(express.json());
@@ -37,6 +39,8 @@ app.use(function (err, req, res, next) {
     res.status(err.statusCode).send({ error: err.details[0] });
   }
 });
+
+app.use(sender);
 
 //CREATE SERVER
 const PORT = config.server.port;

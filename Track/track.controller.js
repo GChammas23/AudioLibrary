@@ -2,7 +2,7 @@
 const services = require("./track.services");
 
 //ADD TRACK API
-exports.addTrack = async (req, res) => {
+exports.addTrack = async (req, res, next) => {
   //Create track object from values in request
   const track = {
     name: req.body.name,
@@ -14,36 +14,42 @@ exports.addTrack = async (req, res) => {
   try {
     const result = await services.addTrack(track);
 
-    res.status(200).send({ result: result });
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
 //GET ALL TRACKS API
-exports.getAllTracks = async (req, res) => {
+exports.getAllTracks = async (req, res, next) => {
   try {
     const result = await services.getAllTracks();
 
-    res.status(200).send({ result: result });
+    req.result = result; //Add result to request
+
+    next() //Move to response middleware
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
 //GET TRACK BY SINGER API
-exports.getTrackBySinger = async (req, res) => {
+exports.getTrackBySinger = async (req, res, next) => {
   try {
     const result = await services.getTrackBySinger(req.params.singer);
 
-    res.status(200).send({ result: result });
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
 //UPDATE TRACK API
-exports.updateTrackById = async (req, res) => {
+exports.updateTrackById = async (req, res, next) => {
   //Create a updatedValues object to send
   const updatedValues = {
     name: req.body.name,
@@ -55,32 +61,28 @@ exports.updateTrackById = async (req, res) => {
   try {
     const result = await services.updateTrackById(updatedValues, req.params.id);
 
-    if (result == 200) {
-      res.end();
-    } else {
-      res.status(result).send();
-    }
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
 //DELETE TRACK API
-exports.deleteTrackById = async (req, res) => {
+exports.deleteTrackById = async (req, res, next) => {
   try {
     const result = await services.deleteTrackById(req.params.id);
 
-    if (result == 200) {
-      res.end();
-    } else {
-      res.status(result).send();
-    }
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
-exports.getSortedTracksByCategory = async (req, res) => {
+exports.getSortedTracksByCategory = async (req, res, next) => {
   //Create parameters object to send to service function
   let parameters = {
     albumId: req.params.albumId,
@@ -93,11 +95,9 @@ exports.getSortedTracksByCategory = async (req, res) => {
   try {
     const result = await services.getSortedTrackByCategory(parameters);
 
-    if (result) {
-      res.status(200).send({ result: result });
-    } else {
-      res.status(404).send();
-    }
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }

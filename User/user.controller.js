@@ -1,7 +1,7 @@
 //Require services functions
 const services = require("./user.services");
 
-exports.createUser = async (req, res) => {
+exports.createUser = async (req, res, next) => {
   //Create user object with values from body
   const user = {
     name: req.body.name,
@@ -13,17 +13,15 @@ exports.createUser = async (req, res) => {
   try {
     const result = await services.createUser(user);
 
-    if (result) {
-      res.status(200).send({ result: result });
-    } else {
-      res.status(409).send();
-    }
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   //Create credentials object to send to services
   const credentials = {
     email: req.body.email,
@@ -33,11 +31,9 @@ exports.login = async (req, res) => {
   try {
     const result = await services.login(credentials);
 
-    if (result) {
-      res.status(200).send({ result: result });
-    } else {
-      res.status(401).send();
-    }
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }

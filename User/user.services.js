@@ -3,7 +3,7 @@ const User = require("../Models/user");
 const jwt = require("jsonwebtoken");
 
 //Require config file
-const config = require("../config");
+const config = require("../configs/config");
 
 //Require nodemailer and nodemailer sendgrid transport to send email to users
 const nodemailer = require("nodemailer");

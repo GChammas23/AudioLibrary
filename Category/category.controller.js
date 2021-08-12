@@ -2,7 +2,7 @@
 const services = require("./category.services");
 
 //ADD CATEGORY API
-exports.addCategory = async (req, res) => {
+exports.addCategory = async (req, res, next) => {
   //Create category object to send to service function
   const category = {
     name: req.body.name,
@@ -13,44 +13,42 @@ exports.addCategory = async (req, res) => {
   try {
     const result = await services.addCategory(category);
 
-    if (result) {
-      res.status(200).send({ result: result });
-    } else {
-      res.status(400).send();
-    }
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
 //GET ALL CATEGORIES
-exports.getCategories = async (req, res) => {
+exports.getCategories = async (req, res, next) => {
   try {
     const result = await services.getCategories();
 
-    res.status(200).send({ result: result });
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
 //GET CATEGORY BY ID
-exports.getCategoryById = async (req, res) => {
+exports.getCategoryById = async (req, res, next) => {
   try {
     const result = await services.getCategoryById(req.params.id);
 
-    if (result) {
-      res.status(200).send({ result: result });
-    } else {
-      res.status(404).send();
-    }
+    req.result = result;
+
+    next();
   } catch (err) {
     throw new Error(err.message); //Error while fetching category
   }
 };
 
 //UPDATE CATEGORY
-exports.updateCategoryById = async (req, res) => {
+exports.updateCategoryById = async (req, res, next) => {
   //Create updatedValues object
   const updatedValues = {
     name: req.body.name,
@@ -61,12 +59,9 @@ exports.updateCategoryById = async (req, res) => {
   try {
     const result = await services.updateCategoryById(updatedValues, req.params.id);
 
-    if (result == 200) {
-      res.end();
-    } else {
-      res.status(result).send();
-    }
+    req.result = result;
 
+    next();
   } catch (err) {
     throw new Error(err.message); //Error while finding the category
   }
@@ -77,12 +72,9 @@ exports.deleteCategoryById = async (req, res) => {
   try {
     const result = await services.deleteCategoryById(req.params.id);
 
-    if (result == 200) {
-      res.end();
-    } else {
-      res.status(result).send();
-    }
+    req.result = result;
 
+    next();
   } catch (err) {
     throw new Error(err.message);
   }
