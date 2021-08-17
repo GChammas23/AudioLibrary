@@ -29,14 +29,22 @@ module.exports = (req, res, next) => {
       //Check if it is the login case
 
       if (req.url === "/api/auth/login") {
-        if (req.result) {
+        if (req.result.token) {
           //Login successful
           object = messages.login.success;
 
           object.result = req.result;
         } else {
           //Login unsuccessful
-          object = messages.login.failure;
+          if (req.result.status == 401) {
+            //Wrong password case
+            object = messages.login.failure.invalidPassword;
+          } else if (req.result.status == 429) {
+            object = messages.login.failure.blocked;
+          } else {
+            //Wrong email case
+            object = messages.login.failure.invalidEmail;
+          }
         }
       } else {
         //Other cases

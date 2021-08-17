@@ -54,25 +54,72 @@ exports.login = async (credentials) => {
   const result = await User.findOne({ email: credentials.email });
 
   if (result) {
-    if (credentials.password == result.password) {
-      //Correct credentials
+    //Check if we have block time on user
+    if (
+      !result.blockTime ||
+      Math.floor((Date.now() - result.blockTime) / 36e5) >= 1
+    ) {
+      //Accept login request
+      if (credentials.password == result.password) {
+        //Correct credentials
 
-      //Create JWT token
-      const token = jwt.sign(
-        {
-          email: credentials.email,
-          id: result._id.toString(),
-        },
-        config.jwt.secret,
-        { expiresIn: "1h" }
-      );
+        //Reset nb of attempts if any
+        if (result.nbOfAttempts > 0) {
+          await User.updateOne(
+            { email: credentials.email },
+            { $set: { nbOfAttempts: 0 } }
+          );
+        }
 
-      //Send the token in the response to front-end
-      return token;
+        //Create JWT token
+        const token = jwt.sign(
+          {
+            email: credentials.email,
+            id: result._id.toString(),
+          },
+          config.jwt.secret,
+          { expiresIn: "1h" }
+        );
+
+        //Send the token in the response to front-end
+        return { status: 200, token: token };
+      } else {
+        //Wrong password case
+        if (Math.floor((Date.now() - result.blockTime) / 36e5) >= 1) {
+          //Block time elapsed
+
+          //Reset nb of attempts count to 0 and remove block time
+          await User.updateOne(
+            { email: result.email },
+            { $set: { nbOfAttempts: 0 }, $unset: { blockTime: "" } }
+          );
+        }
+
+        //First check nbOfAttempts for the user
+        if (result.nbOfAttempts === 5) {
+          //User is blocked
+          return { status: 429 };
+        } else if (result.nbOfAttempts === 4) {
+          //Block user and update nbOfAttempts
+          await User.updateOne(
+            { email: credentials.email },
+            { blockTime: Date.now() }
+          );
+        }
+
+        //Increment nb of attempts for user
+        await User.updateOne(
+          { email: credentials.email },
+          { $inc: { nbOfAttempts: 1 } }
+        );
+
+        return { status: 401 };
+      }
     } else {
-      return;
+      //User is blocked, reject request
+      return { status: 429 };
     }
   } else {
-    return;
+    return { status: 404 };
   }
 };

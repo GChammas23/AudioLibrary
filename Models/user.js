@@ -19,6 +19,15 @@ const userSchema = new Schema({
     type: Date,
   },
 
+  nbOfAttempts: {
+    type: Number,
+    default: 0,
+  },
+
+  blockTime: {
+    type: Date,
+  },
+
   __v: {
     type: Number,
     select: false,

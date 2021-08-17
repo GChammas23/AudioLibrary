@@ -19,8 +19,8 @@ module.exports = {
 
     failure: {
       status: 404,
-      message: "Couldn't find any record"
-    }
+      message: "Couldn't find any record",
+    },
   },
 
   update: {
@@ -38,13 +38,13 @@ module.exports = {
   delete: {
     success: {
       status: 200,
-      message:  "The record has been successfully deleted!",
+      message: "The record has been successfully deleted!",
     },
 
     failure: {
       status: 500,
       message: "An error occurred while trying to delete the record",
-    }
+    },
   },
 
   login: {
@@ -54,8 +54,21 @@ module.exports = {
     },
 
     failure: {
-      status: 401,
-      message: "Email or password is incorrect",
-    }
-  }
+      invalidEmail: {
+        status: 404,
+        message:
+          "Invalid email address, please make sure you enter a valid one",
+      },
+
+      blocked: {
+        status: 429,
+        message: "Your account has been blocked for 1 hour, please wait",
+      },
+
+      invalidPassword: {
+        status: 401,
+        message: "Wrong password",
+      },
+    },
+  },
 };
