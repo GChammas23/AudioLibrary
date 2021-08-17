@@ -9,51 +9,7 @@ This project contains multiple back-end microservices that allow for complete ma
 
 ## Project structure
 
-```
-├── Album (All files related to album model)
-│   ├── album.controller.js
-│   ├── album.routes.js
-│   ├── album.services.js
-│   └── album.validation.js
-|
-├── Category (All files related to category model)
-│   ├── category.controller.js
-│   ├── category.routes.js
-│   ├── category.services.js
-│   └── category.validation.js
-|
-├── Models (All mongoose model files are here)
-│   ├── album.js
-│   ├── category.js
-│   ├── track.js
-│   └── user.js
-|
-|
-├── Track (All files related to track model)
-│   ├── track.controller.js
-│   ├── track.routes.js
-│   ├── track.services.js
-│   └── track.validation.js
-|
-├── User (All files related to user model)
-│   ├── user.controller.js
-│   ├── user.routes.js
-│   ├── user.services.js
-│   └── user.validation.js
-|
-├── app.js (Start point of server)
-|
-├── configs (Configuration files are stored here)
-│   ├── config.js
-│   └── messages.config.js
-|
-├── middleware (Middleware functions are here)
-│   ├── checkToken.js
-│   └── responseSender.js
-|
-├── package-lock.json
-├── package.json
-```
+![Visualization of the repository](./diagram.svg)
 
 ## Models
 
