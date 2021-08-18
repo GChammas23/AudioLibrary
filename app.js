@@ -13,7 +13,6 @@ require("dotenv").config();
 //Require config file
 const config = require("./configs/config");
 
-const sender = require('./middleware/responseSender');
 
 //SETUP MIDDLEWARE
 app.use(express.json());
@@ -40,7 +39,6 @@ app.use(function (err, req, res, next) {
   }
 });
 
-app.use(sender);
 
 //CREATE SERVER
 const PORT = config.server.port;
