@@ -68,28 +68,8 @@ exports.deleteAlbumById = async (id) => {
 };
 
 exports.getNbOfTracks = async () => {
-  //Create an array to store results in
-  var results = [];
+  //Group tracks by album id using aggregate
+  const result = await Track.aggregate([{$group: {_id: {albumId: "$albumId"}, numberOfTracks: {$sum: 1}}}]);
 
-  //Get list of all albums who have showNbOfTracks set to true
-  Album.aggregate([{ $match: { showNbOfTracks: true } }]).then(
-    async (result) => {
-      if (result.length !== 0) {
-        for (let counter = 0; counter < result.length; counter++) {
-          //Loop through albums and access their _id
-          const id = result[counter]._id;
-
-          const count = await Track.countDocuments({ albumId: id });
-
-          results.push({
-            albumId: id,
-            trackCount: count,
-          });
-        }
-        return results;
-      } else {
-        return;
-      }
-    }
-  );
+  return result;
 };
