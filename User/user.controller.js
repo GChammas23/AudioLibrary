@@ -1,5 +1,6 @@
-//Require services functions
+//Require services functions and sender middleware.
 const services = require("./user.services");
+const sender = require("../middleware/responseSender");
 
 exports.createUser = async (req, res, next) => {
   //Create user object with values from body
@@ -15,7 +16,7 @@ exports.createUser = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -33,7 +34,7 @@ exports.login = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }

@@ -1,5 +1,6 @@
-//Require services file for DB logic
+//Require services file for DB logic and sender middleware
 const services = require("./track.services");
+const sender = require("../middleware/responseSender");
 
 //ADD TRACK API
 exports.addTrack = async (req, res, next) => {
@@ -16,7 +17,7 @@ exports.addTrack = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -29,7 +30,7 @@ exports.getAllTracks = async (req, res, next) => {
 
     req.result = result; //Add result to request
 
-    next() //Move to response middleware
+  sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -42,7 +43,7 @@ exports.getTrackBySinger = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -63,7 +64,7 @@ exports.updateTrackById = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -76,7 +77,7 @@ exports.deleteTrackById = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -97,7 +98,7 @@ exports.getSortedTracksByCategory = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }

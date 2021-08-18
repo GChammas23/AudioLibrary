@@ -1,5 +1,6 @@
-//Require services functions
+//Require services functions and sender middleware
 const services = require("./category.services");
+const sender = require("../middleware/responseSender");
 
 //ADD CATEGORY API
 exports.addCategory = async (req, res, next) => {
@@ -15,7 +16,7 @@ exports.addCategory = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -28,7 +29,7 @@ exports.getCategories = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -41,7 +42,7 @@ exports.getCategoryById = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message); //Error while fetching category
   }
@@ -61,7 +62,7 @@ exports.updateCategoryById = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message); //Error while finding the category
   }
@@ -74,7 +75,7 @@ exports.deleteCategoryById = async (req, res) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }

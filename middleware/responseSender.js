@@ -1,7 +1,7 @@
 //Require message configs to use in response
 const messages = require("../configs/messages.config");
 
-module.exports = (req, res, next) => {
+module.exports = (req, res) => {
   // First check the method used in the request
 
   switch (req.method) {

@@ -1,6 +1,9 @@
 //Require service functions
 const services = require("./album.services");
 
+//Require sender middleware to use
+const sender = require("../middleware/responseSender");
+
 //Add album API
 exports.addAlbum = async (req, res, next) => {
   //Create new album object to send to service function
@@ -16,7 +19,7 @@ exports.addAlbum = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -29,7 +32,8 @@ exports.getAlbums = async (req, res, next) => {
     const result = await services.getAlbums();
 
     req.result = result;
-    next();
+
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -42,7 +46,7 @@ exports.getAlbumById = async (req, res, next) => {
 
     req.result = result;
 
-    next(); //Move to response middleware
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message); //Error while fetching album
   }
@@ -63,7 +67,7 @@ exports.updateAlbumById = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message); //Error occurred in find
   }
@@ -75,7 +79,7 @@ exports.deleteAlbumById = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
@@ -88,7 +92,7 @@ exports.getNbOfTracks = async (req, res, next) => {
 
     req.result = result;
 
-    next();
+    sender(req, res);
   } catch (err) {
     throw new Error(err.message);
   }
