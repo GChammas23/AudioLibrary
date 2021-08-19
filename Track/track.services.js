@@ -65,31 +65,38 @@ exports.getSortedTrackByCategory = async (parameters) => {
   //Get all songs in album with given category
 
   //Check if we have a category id sent in the request
-  if (parameters.categoryId) {
+  if (parameters.categoryName) {
     //We have a category
 
     //Find album first
     const album = await Album.findById(parameters.albumId);
 
     if (album) {
-      //Album found, now get category
-      const category = await Category.findById(parameters.categoryId);
+      //Album found, now get category id from category passed in parameters
+      const category = await Category.findOne({
+        name: { $regex: `^${parameters.categoryName}`, $options: "i" },
+      });
 
       if (category) {
+        //Get page and limit from parameters
+        const page = parameters.page - 1;
+        const limit = parameters.limit;
+
+        console.log(parameters);
+
         //Finally, get tracks related to album and category
-        const tracks = await Track.find({
-          albumId: parameters.albumId,
-          categoryId: parameters.categoryId,
-        });
+        const tracks = await Track.aggregate([
+          { $match: { albumId: album._id, categoryId: category._id } },
+          { $skip: page * limit },
+          { $limit: limit },
+        ]);
 
         return tracks;
-      }
-      else {
+      } else {
         //Category not found
         return;
       }
-    }
-    else {
+    } else {
       //Album not found
       return;
     }
