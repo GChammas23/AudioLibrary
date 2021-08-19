@@ -54,6 +54,20 @@ This model represents a user that might interact with the content of the applica
 
 ## How to start the server
 
+Starting the server requires two steps as shown below:
+
+### Installing the modules
+
+If you don't see a node_modules folder, run the below command:
+
+```bash
+npm install
+```
+
+### Run the server
+
+Run the following command to start the server:
+
 ```bash
 npm start
 ```
