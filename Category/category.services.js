@@ -1,5 +1,5 @@
 const Category = require("../Models/category");
-const Track = require("../Models/track");
+const trackServices = require("../Track/track.services");
 
 exports.addCategory = async (category) => {
   //Create object from model with given values
@@ -14,6 +14,14 @@ exports.getCategories = async () => {
   const result = await Category.find();
 
   return result;
+};
+
+//This service function uses regex to find a category that contains the searchQuery passed
+exports.searchCategory = async (searchQuery) => {
+  const formattedExpression = `^${searchQuery}`;
+  const category = await Category.findOne({name: {$regex: formattedExpression, $options: "i"}});
+
+  return category;
 };
 
 exports.getCategoryById = async (id) => {
@@ -48,7 +56,7 @@ exports.deleteCategoryById = async (id) => {
 
   if (category) {
     //Check if category has any tracks related to it
-    const tracks = await Track.findOne({ categoryId: id });
+    const tracks = await trackServices.getTracksByCategoryId(id);
 
     if (tracks) {
       //One track found, can't delete

@@ -90,9 +90,9 @@ exports.getSortedTracksByCategory = async (req, res, next) => {
   };
 
   if (Object.keys(req.query).length > 0) {
-    parameters.categoryName = req.query[Object.keys(req.query)[0]];
-    parameters.page = parseInt(req.query[Object.keys(req.query)[1]]);
-    parameters.limit = parseInt(req.query[Object.keys(req.query)[2]]);
+    parameters.categoryName = req.query.category;
+    parameters.page = parseInt(req.query.page);
+    parameters.limit = parseInt(req.query.limit);
   }
 
   try {

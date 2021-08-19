@@ -1,6 +1,7 @@
+//Require Track model and other models services to use
 const Track = require("../Models/track");
-const Album = require("../Models/album");
-const Category = require("../Models/category");
+const albumServices = require("../Album/album.services");
+const categoryServices = require("../Category/category.services");
 
 exports.addTrack = async (track) => {
   //Create track object to save
@@ -64,26 +65,24 @@ exports.deleteTrackById = async (id) => {
 exports.getSortedTrackByCategory = async (parameters) => {
   //Get all songs in album with given category
 
+  //Get page and limit from parameters
+  const page = parameters.page - 1;
+  const limit = parameters.limit;
+
   //Check if we have a category id sent in the request
   if (parameters.categoryName) {
     //We have a category
 
     //Find album first
-    const album = await Album.findById(parameters.albumId);
+    const album = await albumServices.getAlbumById(parameters.albumId);
 
     if (album) {
       //Album found, now get category id from category passed in parameters
-      const category = await Category.findOne({
-        name: { $regex: `^${parameters.categoryName}`, $options: "i" },
-      });
+      const category = await categoryServices.searchCategory(
+        parameters.categoryName
+      );
 
       if (category) {
-        //Get page and limit from parameters
-        const page = parameters.page - 1;
-        const limit = parameters.limit;
-
-        console.log(parameters);
-
         //Finally, get tracks related to album and category
         const tracks = await Track.aggregate([
           { $match: { albumId: album._id, categoryId: category._id } },
@@ -104,11 +103,15 @@ exports.getSortedTrackByCategory = async (parameters) => {
     //No category found, only albumId is provided
 
     //Find album first
-    const album = await Album.findById(parameters.albumId);
+    const album = await albumServices.getAlbumById(parameters.albumId);
 
     if (album) {
       //Album found, now get all related tracks
-      const tracks = await Track.find({ albumId: parameters.albumId });
+      const tracks = await Track.aggregate([
+        { $match: { albumId: album._id } },
+        { $skip: page * limit },
+        { $limit: limit },
+      ]);
 
       return tracks;
     } else {
@@ -117,3 +120,16 @@ exports.getSortedTrackByCategory = async (parameters) => {
     }
   }
 };
+
+exports.getTracksByCategoryId = async (id) => {
+  const tracks = await Track.find({categoryId: id});
+
+  return tracks;
+}
+
+
+exports.getTracksByAlbumId = async (id) => {
+  const tracks = await Track.find({albumId: id });
+
+  return tracks;
+}

@@ -1,5 +1,6 @@
-//Require needed modules and models
+//Require album & track model and other services needed
 const Album = require("../Models/album");
+const trackServices = require("../Track/track.services");
 const Track = require('../Models/track');
 
 exports.addAlbum = async (album) => {
@@ -50,7 +51,7 @@ exports.deleteAlbumById = async (id) => {
 
   if (album) {
     //Check if album has any tracks
-    const track = await Track.findOne({ albumId: id });
+    const track = await trackServices.getTracksByAlbumId(id);
 
     if (track) {
       //One track found cannot delete
