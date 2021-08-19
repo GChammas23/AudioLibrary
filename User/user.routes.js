@@ -19,4 +19,6 @@ router.post(
   users.login
 );
 
+router.post("/sendResetMail", users.sendResetMail);
+
 module.exports = router;

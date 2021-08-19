@@ -22,13 +22,12 @@ module.exports = (req, res) => {
       break;
 
     case "POST":
-      //Add case
-
+      //Post case
       let object;
 
       //Check if it is the login case
 
-      if (req.url === "/api/auth/login") {
+      if (req.url === "/login") {
         if (req.result.token) {
           //Login successful
           object = messages.login.success;
@@ -46,7 +45,25 @@ module.exports = (req, res) => {
             object = messages.login.failure.invalidEmail;
           }
         }
-      } else {
+      } 
+      else if (req.url === "/sendResetMail") {
+        if (req.result == 200) {
+          //Reset pass email successfully sent
+          object = messages.resetPassMail.success;
+
+        }
+        else if (req.result == 401) {
+          //Error while sending mail
+          object = messages.resetPassMail.mailError;
+
+        }
+        else {
+          //Invalid email
+          object = messages.read.failure;
+
+        }
+      }
+      else {
         //Other cases
 
         //Check if anything is in request

@@ -71,4 +71,16 @@ module.exports = {
       },
     },
   },
+
+  resetPassMail: {
+    success: {
+      status: 200,
+      message: "Reset password link has been successfully sent to your email!",
+    },
+
+    mailError: {
+      status: 401,
+      message: "Unauthorized request. Please try again later!",
+    }
+  }
 };

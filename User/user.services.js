@@ -123,3 +123,47 @@ exports.login = async (credentials) => {
     return { status: 404 };
   }
 };
+
+exports.sendResetMail = async (userEmail) => {
+  //First check if email is valid
+  const user = await User.findOne({ email: userEmail });
+
+  if (user) {
+    //User found, now create token and send it by mail
+
+    //Create jwt token
+    const token = jwt.sign(
+      {
+        email: user.email,
+        id: user._id.toString(),
+      },
+      config.jwt.secret,
+      { expiresIn: "1h" }
+    );
+
+    //Create link to send in email
+    const link = `http://localhost:4200/reset-password/${token}`;
+
+    //Now send link to user
+    const sendMail = await transporter.sendMail({
+      to: user.email,
+      from: "audioLibrary2380@gmail.com",
+      subject: "Reset your password",
+      html: `<h1>Want to reset your password?</h1>
+            <p>Hey ${user.name}! We've received a request from you to reset your password. Please use the button below to do so</p>
+            <form action=${link}>
+              <button type="submit" style="background-color:#69D1C5;">Reset password</button>
+            </form>`,
+    });
+
+    if (sendMail) {
+      //Mail successfully sent
+      return 200;
+    } else {
+      return 401;
+    }
+  } else {
+    //User not found
+    return 404;
+  }
+};

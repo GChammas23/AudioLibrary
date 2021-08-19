@@ -2,7 +2,7 @@
 const services = require("./user.services");
 const sender = require("../middleware/responseSender");
 
-exports.createUser = async (req, res, next) => {
+exports.createUser = async (req, res) => {
   //Create user object with values from body
   const user = {
     name: req.body.name,
@@ -22,7 +22,7 @@ exports.createUser = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   //Create credentials object to send to services
   const credentials = {
     email: req.body.email,
@@ -32,6 +32,18 @@ exports.login = async (req, res, next) => {
   try {
     const result = await services.login(credentials);
 
+    req.result = result;
+
+    sender(req, res);
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+exports.sendResetMail = async (req, res) => {
+  try {
+    const result = await services.sendResetMail(req.body.email);
+    
     req.result = result;
 
     sender(req, res);
