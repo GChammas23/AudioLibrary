@@ -150,7 +150,8 @@ exports.sendResetMail = async (userEmail) => {
       from: "audioLibrary2380@gmail.com",
       subject: "Reset your password",
       html: `<h1>Want to reset your password?</h1>
-            <p>Hey ${user.name}! We've received a request from you to reset your password. Please use the button below to do so</p>
+            <p>Hey ${user.name}! We've received a request from you to reset your password.
+            Please use the button below to do so:</p>
             <h4 style="color:red">Please note that using the below button is only valid for 1 hour!</h4>
             <form action=${link}>
               <button type="submit" style="background-color:#69D1C5;">Reset password</button>
@@ -167,4 +168,14 @@ exports.sendResetMail = async (userEmail) => {
     //User not found
     return 404;
   }
+};
+
+exports.resetPass = async (credentials) => {
+  //Update user with the new password
+  await User.updateOne(
+    { email: credentials.email },
+    { $set: { password: credentials.password } }
+  );
+
+  return 200;
 };

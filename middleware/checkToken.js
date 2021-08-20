@@ -1,5 +1,6 @@
 //Require jwt to check token
 const jwt = require("jsonwebtoken");
+const config = require("../configs/config");
 
 //Middleware method to check authentication of user
 module.exports = (req, res, next) => {
@@ -12,7 +13,7 @@ module.exports = (req, res, next) => {
 
   try {
     //Validate the token
-    const decodedToken = jwt.verify(receivedToken, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(receivedToken, config.jwt.secret);
 
     if (!decodedToken) {
       //Token could not be decoded

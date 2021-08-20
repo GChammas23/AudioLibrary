@@ -7,6 +7,7 @@ const { validate } = require("express-validation");
 const users = require("./user.controller");
 
 const validation = require("./user.validation");
+const checkToken = require("../middleware/checkToken");
 
 router.post(
   "/signUp",
@@ -20,5 +21,12 @@ router.post(
 );
 
 router.post("/sendResetMail", users.sendResetMail);
+
+router.put(
+  "/resetPass",
+  validate(validation.resetPassSchema, { keyByField: true }, {}),
+  checkToken,
+  users.resetPass
+);
 
 module.exports = router;

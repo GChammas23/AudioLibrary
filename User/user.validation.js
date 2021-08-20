@@ -39,3 +39,12 @@ exports.signUpSchema = {
     .with("password", "confirmPassword")
     .with("confirmPassword", "password"),
 };
+
+exports.resetPassSchema = {
+  body: Joi.object({
+    password: Joi.string().required().messages({
+      "any.required": "Password not entered!",
+      "string.empty": "Password can't be empty!",
+    }),
+  }),
+};
