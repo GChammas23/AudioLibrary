@@ -151,6 +151,7 @@ exports.sendResetMail = async (userEmail) => {
       subject: "Reset your password",
       html: `<h1>Want to reset your password?</h1>
             <p>Hey ${user.name}! We've received a request from you to reset your password. Please use the button below to do so</p>
+            <h4 style="color:red">Please note that using the below button is only valid for 1 hour!</h4>
             <form action=${link}>
               <button type="submit" style="background-color:#69D1C5;">Reset password</button>
             </form>`,
