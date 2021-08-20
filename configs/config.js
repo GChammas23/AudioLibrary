@@ -13,5 +13,7 @@ module.exports = {
 
     server: {
         port: process.env.PORT,
-    }
+    },
+
+    email: process.env.EMAIL,
 }

@@ -34,7 +34,7 @@ exports.createUser = async (user) => {
     // Send email to newly created user using sendGrid and nodeMailer
     const sendMail = await transporter.sendMail({
       to: user.email,
-      from: "audioLibrary2380@gmail.com",
+      from: config.email,
       subject: "Sign up successful!",
       text: `Welcome to AudioLibrary ${user.name}!`,
     });
@@ -147,7 +147,7 @@ exports.sendResetMail = async (userEmail) => {
     //Now send link to user
     const sendMail = await transporter.sendMail({
       to: user.email,
-      from: "audioLibrary2380@gmail.com",
+      from: config.email,
       subject: "Reset your password",
       html: `<h1>Want to reset your password?</h1>
             <p>Hey ${user.name}! We've received a request from you to reset your password.
@@ -177,5 +177,20 @@ exports.resetPass = async (credentials) => {
     { $set: { password: credentials.password } }
   );
 
-  return 200;
+  //Send email to user to confirm password reset
+  const sendMail = await transporter.sendMail({
+    to: credentials.email,
+    from: config.email,
+    subject: "Password successfully reset",
+    html: `<h1>Your password has been reset</h1> 
+          <p>This is to inform you that your password has been successfully reset. 
+          If you think this was not supposed to happen, please feel free to 
+          <a href="mailto:audiolibrary2380@gmail.com">Contact us!</a></a></p>`,
+  });
+
+  if (sendMail) {
+    return 200;
+  }else {
+    return 500;
+  }
 };
